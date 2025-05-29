@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Commissions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/regform.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_products.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            display: flex; /* Use Flexbox */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: 100vh; /* Full height of the viewport */
+            margin: 0; /* Remove default body margin */
+            padding: 0; /* Remove default body padding */
+            background-color: #f4f4f9; /* Optional: background color for the body */
+        }
+
+        .container {
+            max-width: 1000px; /* Adjusted maximum width for the container */
+            width: 100%; /* Allow it to be responsive, taking 100% of the viewport width */
+            padding: 0 15px; /* Optional: Add some padding to the sides */
+            height: auto; /* Adjust height as needed */
+            background-color: #F4F4F9;
+            border: none;
+            box-shadow: none;
+            margin-bottom: 125px;
+        }
+
+        .form-label {
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #F4F4F9;
+            border-radius: 5px;
+        }
+
+        .search-input {
+            margin-top: 50px; /* Add top margin */
+        }
+
+        .filter-input {
+            padding: 8px 12px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            height: 40px;
+            line-height: 1.5;
+            font-size: 1em;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
+
+        .filter-button {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px; /* Add some space between buttons */
+        }
+
+        .filter-button:hover {
+            background-color: #0056b3; /* Change color on hover */
+        }
+
+        .table-wrapper {
+            margin-top: 20px;
+            overflow-x: auto; /* Allow horizontal scrolling if needed */
+            width: 100%; /* Ensure the wrapper takes full width */
+        }
+
+        table {
+            width: 100%; /* Ensure the table takes the full width */
+            border-collapse: collapse; /* Ensure borders are collapsed */
+        }
+
+        th, td {
+            padding: 10px; /* Consistent padding */
+            text-align: center;
+            border: 1px solid #ccc; /* Consistent border */
+        }
+
+        th {
+            background-color: #FFF3E3;
+            color: #856404;
+            font-weight: bold;          
+        }     
+
+
+        td {
+            min-height: 50px; /* Ensures minimum height for consistency */
+            line-height: 4; /* Adjust as needed */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                <span class="logoname">Chairable</span>
+            </div>
+            <ul class="nav-links">        
+                <li><a href="{{ url_for('accounts') }}">Buyers</a></li> 
+                <li><a href="{{ url_for('admin_users') }}">Sellers</a></li>
+                <li><a href="{{ url_for('approvals') }}">Approvals</a></li>
+                <li><a href="{{ url_for('admin_user_archive') }}">Archive</a></li>
+                <li><a href="{{ url_for('admin_commissions') }}">Commissions</a></li>
+            </ul>
+            <div class="icon-container">
+                <div class="user-profile">
+                    <a href="#" aria-label="User  Profile"><i class="fas fa-user"></i></a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('logout') }}" aria-label="Log Out">Log Out</a>
+                    </div>
+                </div>
+                <a href="#" aria-label="Search"><i class="fas fa-search"></i></a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="container">
+            <!-- Filter Section -->
+            <div class="filter-container">
+                <input type="text" id="searchInput" class="filter-input search-input" placeholder="Search by Buyer Name or Order ID">                <label for="startDate" class="form-label">Start Date</label>
+                <input type="date" id="startDate" class="filter-input" title="Select the start date">
+                
+                <label for="endDate" class="form-label">End Date</label>
+                <input type="date" id="endDate" class="filter-input" title="Select the end date">
+                
+                <button type="button" class="filter-button">Filter</button>
+                <button type="button" class="filter-button" id="exportReportButton">Export Report</button>
+        </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Product Name</th>
+                            <th>Buyer Name</th>
+                            <th>Total Amount</th>
+                            <th>Admin Commission (5%)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if commissions_data %}
+                            {% for commission in commissions_data %}
+                            <tr>
+                                <td>{{ commission.order_id }}</td>
+                                <td>{{ commission.product_name }}</td>
+                                <td>{{ commission.buyer_name }}</td>
+                                <td>&#8369;{{ "%.2f"|format(commission.total_amount) }}</td>
+                                <td>&#8369;{{ "%.2f"|format(commission.commission) }}</td>
+                                <td>{{ commission.status }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6">No commission data found.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <footer>
+    </footer>
+    <script>
+        document.getElementById('exportReportButton').addEventListener('click', function() {
+            // Logic to export the report
+            alert('Exporting Commission Report...');
+            // You can implement the actual export functionality here
+        });
+
+        document.querySelector('.filter-button').addEventListener('click', function() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const searchInput = document.getElementById('searchInput').value;
+
+            // Logic to filter the table based on the input values
+            // This can be implemented using JavaScript to manipulate the DOM or by sending a request to the server
+            alert(`Filtering from ${startDate} to ${endDate} for ${searchInput}`);
+        });
+    </script>
+</body>
+</html>

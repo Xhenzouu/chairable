@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/regform.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .otp-container {
+            max-width: 500px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        h1 {
+            text-align: center;
+            color: #444;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .center-message {
+            text-align: center;
+            margin: 15px auto;
+        }
+
+        .message {
+            max-height: 100px;
+            overflow: auto;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        footer {
+            background-color: #ffff;
+            border-top: 1px solid #dee2e6;
+            color: black;
+            padding: 40px 20px;
+            text-align: left;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+            clear: both;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .footer-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="otp-container">
+            <h1>Verify OTP</h1>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="message center-message">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <form method="POST" action="{{ url_for('verify_otp') }}">
+                <label for="otp">Enter OTP:</label>
+                <input type="text" id="otp" name="otp" title="One-Time Password" placeholder="Enter the OTP sent to your email" required>
+                <input type="submit" value="Verify OTP">
+            </form>
+            <div class="center-message">
+                <a href="{{ url_for('login') }}">Back to Login</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="footer-logo-img">
+                <span class="footer-logoname">Chairable</span>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-media">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Help</h3>
+                <ul>
+                    <li><a href="#paymentmethods">Payment Methods</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#shipping">Shipping Information</a></li>
+                    <li><a href="#returns">Returns & Exchanges</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to our newsletter for the latest updates and offers:</p>
+                <form action="#" method="post" class="newsletter-form">
+                    <input type="email" placeholder="Your Email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <p>Learn more about our company, values, and mission.</p>
+                <a href="#about" class="btn read-more">Read More</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Chairable. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

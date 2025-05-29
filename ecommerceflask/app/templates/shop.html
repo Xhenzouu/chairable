@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/showcaseproduct.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/filter.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pagination.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/popover.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cartmessage.css') }}">
+</head>
+<style>
+    .subtotal-row {
+        margin-bottom: -5px; /* Adjust the value as needed */
+        margin-top: -5px; /* Adjust the value as needed */
+    }
+
+    .price {
+        margin-bottom: 10px; /* Adjust the value as needed */
+        display: inline-block; /* Ensures margin is applied correctly */
+    }
+
+    .cart-buttons {
+    display: flex; /* Use flexbox for button alignment */
+    justify-content: space-between; /* Space buttons evenly */
+    gap: 10px; /* Adds space between buttons */
+}
+
+.cart-btn {
+    flex: 1; /* Allow buttons to grow equally */
+    color: #000000;
+    background-color: white;
+    border: 1px solid #000000;
+    padding: 5px; /* Adjust padding for consistent height */
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px; /* Smaller font size */
+    margin: 0; /* Remove margin to avoid inconsistency */
+    line-height: 1; /* Ensures text is vertically centered */
+    min-width: 100px; /* Optional: Set a minimum width */
+    max-height: 30px; /* Set a maximum height */
+    height: 30px;
+}
+
+.cart-btn:hover {
+    background-color: #FFF3E3;
+    font-weight: bold;
+    color: #000;    
+}
+
+.availableStock {
+    margin: 5px 0;
+    padding: 0 10px;
+    color: grey; /* Optional: make the text grey */
+    font-style: italic;
+}
+
+.stock-number {
+    color: #B88E2F; /* Change this to your desired color for the stock number */
+    font-weight: bold; /* Optional: make the stock number bold */
+    font-style: normal;
+}
+</style>
+<body>
+    <header>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                <span class="logoname">Chairable</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index">Home</a></li>
+                <li><a href="shop">Shop</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="contact">Contact</a></li>
+            </ul>
+            <div class="icon-container">
+                <a href="#" aria-label="User  Profile"><i class="fas fa-user"></i></a>
+                <a href="{{ url_for('current_orders') }}" aria-label="Current Orders"><i class="fas fa-box"></i></a>
+                <a href="#" aria-label="Favorites"><i class="fas fa-heart"></i></a>
+                <a href="#" id="cart-icon" aria-label="Shopping Cart"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- Cart Popover -->
+    <div id="cart-popover" class="cart-popover">
+        <div class="cart-popover-header">
+            <h5>Shopping Cart</h5>
+            <button class="close-btn" id="close-cart-btn">&times;</button>
+        </div>
+        <div class="cart-items">
+            <!-- Cart items will be dynamically injected here -->
+        </div>
+        <div class="cart-summary">
+            <div class="subtotal-row">
+                <p class="text-left">Subtotal:</p> 
+                <span class="price"> id="subtotal" >PHP 0.00</span> <!-- Initial subtotal -->
+            </div>                
+            <div class="cart-buttons">
+                <button class="btn cart-btn" id="cart-btn">Cart</button>
+                <button class="btn cart-btn" id="checkout-btn">Checkout</button>
+                <button class="btn cart-btn">Comparison</button>
+            </div>
+        </div>
+    </div>
+    <div id="overlay" class="overlay"></div> 
+
+    <main>
+        <section class="product-showcase">
+            <h2 class="section-title">Our Products</h2>
+            
+            <div class="filter-section">
+                <h3>Filter Options</h3>
+                <form id="filter-form">
+                    <label for="search">Search:</label>
+                    <input type="text" id="search" placeholder="Search products..." aria-label="Search products">
+            
+                    <label for="category">Category:</label>
+                    <select id="category">
+                        <option value="">All Categories</option>
+                        <option value="Home Comfort">Home Comfort</option>
+                        <option value="Garden Outdoor">Garden Outdoor</option>
+                    </select>
+            
+                    <label for="subcategory">Subcategory:</label>
+                    <select id="subcategory">
+                        <option value="">All Subcategories</option>
+                        <optgroup label="Home Comfort">
+                            <option value="Kitchen Appliances">Kitchen Appliances</option>
+                            <option value="Furniture & Decor">Furniture & Decor</option>
+                            <option value="Bedding & Bath">Bedding & Bath</option>
+                        </optgroup>
+                        <optgroup label="Garden Outdoor">
+                            <option value="Gardening Tools">Gardening Tools</option>
+                            <option value="Outdoor Living">Outdoor Living</option>
+                            <option value="Home Improvement Tools">Home Improvement Tools</option>
+                        </optgroup>
+                    </select>
+                    
+                    <label for="sort-by">Sort By:</label>
+                    <select id="sort-by">
+                        <option value="default">Default</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                        <option value="rating">Rating</option>
+                        <option value="newest">Newest</option>
+                    </select>
+                    
+                    <label for="show">Show:</label>
+                    <select id="show">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                    </select>
+                </form>
+            </div>
+                        
+            <div class="product-grid">
+                {% for product in products %}
+                <div class="product" data-category="{{ product[5] | title }}" data-subcategory="{{ product[6] | title }}">
+                    <div class="product-image">
+                        {% if product[4] and product[4] is string and product[4].startswith('http') %}
+                            <!-- Case: The image URL is a valid external link -->
+                            <img src="{{ product[4] }}" alt="{{ product[1] }}">
+                        {% elif product[4] %}
+                            <!-- Case: Local uploaded image file -->
+                            <a href="{{ url_for('uploaded_file', filename=product[4].split('/')[-1]) }}" target="_blank">
+                                <img src="{{ url_for('uploaded_file', filename=product[4].split('/')[-1]) }}" alt="{{ product[1] }}">
+                            </a>
+                        {% else %}
+                            <!-- Fallback image if no URL or uploaded image is present -->
+                            <img src="{{ url_for('static', filename='default-placeholder.png') }}" alt="No Image">
+                        {% endif %}
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn view-details" data-id="{{ product[0] }}" data-name="{{ product[1] }}" data-price="{{ product[3] }}" data-image="{{ product[4] }}">View Details</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>{{ product[1] }}</h3>
+                    <p class="availableStock">Available Stock: <span class="stock-number">{{ product[7] }}</span></p>
+                    <p class="price">₱{{ product[3] }}</p>
+                </div>
+                {% endfor %}
+            </div>
+                        
+            
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center mt-4">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                    <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
+                    <li class="page-item"><a class="page-link" href="?page=3">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page=next">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="footer-logo-img">
+                <span class="footer-logoname">Chairable</span>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-media">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Help</h3>
+                <ul>
+                    <li><a href="#paymentmethods">Payment Methods</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#shipping ">Shipping Information</a></li>
+                    <li><a href="#returns">Returns & Exchanges</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to our newsletter for the latest updates and offers:</p>
+                <form action="#" method="post" class="newsletter-form">
+                    <input type="email" placeholder="Your Email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <p>Learn more about our company, values, and mission.</p>
+                <a href="#about" class="btn read-more">Read More</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Chairable. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="loading-overlay" class="overlay">
+        <div class="overlay-content">
+            <div class="message-container">
+                <i class="fas fa-spinner fa-spin"></i> <!-- Spinner icon for loading -->
+                <p>Loading product details...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popover.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/filter.js') }}"></script> <!-- Include the filter.js file -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Checkout button event listener
+            document.getElementById('checkout-btn').addEventListener('click', function() {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                
+                // Check if the cart is empty
+                if (cart.length === 0) {
+                    alert('Your cart is empty. Please add items to your cart before checking out.');
+                    return;
+                }
+    
+                // Redirect to the checkout page
+                window.location.href = '/checkout'; // Change this to your actual checkout page URL
+            });
+    
+            // Cart button event listener
+            document.getElementById('cart-btn').addEventListener('click', function() {
+                window.location.href = '/cart'; // Redirect to the cart route
+            });
+    
+            // View Details button event listeners
+            document.querySelectorAll('.view-details').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent the default anchor behavior
+
+                    // Show the loading overlay
+                    const loadingOverlay = document.getElementById('loading-overlay');
+                    loadingOverlay.classList.add('visible');
+
+                    // Redirect to the product details page after a short delay
+                    const productId = this.getAttribute('data-id');
+                    setTimeout(() => {
+                        window.location.href = `/item/${productId}`; // Redirect to the product details page
+                    }, 1000); // Adjust the delay as needed (1000ms = 1 second)
+                });
+            });
+        });
+    </script>
+</body>
+</html>

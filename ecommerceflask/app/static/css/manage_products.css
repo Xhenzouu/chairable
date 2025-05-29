@@ -1,0 +1,193 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f6f9; /* Softer light background for better contrast */
+}
+
+header {
+    background-color: #343a40; /* Dark header background */
+    color: white;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500; /* Slightly bolder font */
+}
+
+.product-table-container {
+    padding: 0; /* Remove padding from container */
+    margin: 120px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* Ensure it covers the full width */
+}
+
+h2 {
+    color: #343a40;
+    text-align: center;
+    margin: 0; /* Set margin to 0 to remove top space */
+    font-size: 1.8em; /* Increased font size for the heading */
+}
+
+.table-wrapper {
+    width: 100%; /* Full width for the table */
+    max-width: 1600px;
+    max-height: 700px; /* Set a fixed maximum height for the table */
+    margin: 0 auto; /* Center the table */
+    overflow-x: auto; /* Allow horizontal scrolling if necessary */
+    overflow-y: auto; /* Enable vertical scrolling */
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 0; /* Remove padding from wrapper */
+    border-style: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0; /* Adjust top margin to 0 */
+    font-size: 1rem; /* Adjust font size for readability */
+}
+
+th, td {
+    border: 1px solid #dee2e6;
+    padding: 2px 10px; /* Increased padding for better spacing */
+    text-align: center;
+    font-weight: 500; /* Bolder text for better visibility */
+}
+
+th {
+    background-color: #495057; /* Darker grey for header */
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    text-transform: uppercase; /* Capitalize header text */
+    letter-spacing: 0.05em; /* Slight letter spacing */
+}
+
+td {
+    background-color: white;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f8f9fa; /* Light grey for alternating rows */
+}
+
+tbody tr:hover {
+    background-color: #e9ecef; /* Slightly darker hover effect */
+}
+
+.button {
+    background-color: #17a2b8;
+    color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    margin: 0 10px 10px 0;
+    min-width: 80px;
+    max-width: 200px; /* Minimum width to ensure uniformity */
+    display: inline-block;
+    text-align: center; /* Center the text */
+    flex: 0 0 auto;
+    margin-left: auto;
+}
+
+.button:hover {
+    background-color: #138496;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    .table-wrapper {
+        padding: 10px;
+    }
+
+    table th, table td {
+        padding: 10px; /* Slightly reduced padding for mobile */
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+.filter-container {
+    display: flex; /* Use flexbox for the container */
+    align-items: center; /* Center items vertically within the container */
+    justify-content: space-between; /* Space items evenly */
+    padding: -10px -10px; /* Reduce top/bottom padding to decrease height */
+    margin-bottom: 0; /* Ensure no margin below the filter container */
+    border-radius: 8px; /* Optional: Rounded corners */
+}
+
+.category-filter,
+.search-filter {
+    margin-right: 20px; /* Add margin between filter sections */
+}
+
+.form-label {
+    margin-bottom: 5px; /* Space between label and input */
+}
+
+.form-input, 
+.form-select {
+    width: 100%; /* Full width for inputs/selects */
+    padding: 8px; /* Keep padding for inputs/selects for better usability */
+    box-sizing: border-box; /* Include padding in the height calculation */
+}
+
+/* Optional: To restrict the width of the filters */
+.category-filter,
+.search-filter {
+    flex: 1; /* Allow filters to grow equally */
+    min-width: 150px; /* Set a minimum width */
+}
+
+.add-product-button {
+    margin-left: auto; /* Pushes the button to the right */
+    width: 150px; /* Set a fixed width for the button */
+    padding: 8px; /* Adjust padding if needed */
+    align-self: flex-end; /* Align button at the end of the container */
+    margin-top: 20px; /* Add margin to adjust the vertical position */
+}
+
+.thumbnail {
+    width: 50px; /* Adjust as needed */
+    height: auto;
+    cursor: pointer;
+}
+
+.full-image {
+    width: 300px; /* Adjust as needed */
+    height: auto;
+    display: none; /* Initially hidden */
+    position: absolute; /* Optional: for positioning */
+    z-index: 1000; /* Optional: ensure it's on top */
+}

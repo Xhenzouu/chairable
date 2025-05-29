@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Users</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/regform.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_products.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notification.css') }}"> <!-- Include notification CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-F3wW6u4Vx4EJzBnS6Wo4jMZYq366löFJ+xjT3sSJIO4Dk8E4I0dT8pzU+YWzBQ" crossorigin="anonymous">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            max-width: 1075px;
+            width: 100%;
+            padding: 0 15px;
+            background-color: #F4F4F9;
+            border: none;
+            box-shadow: none;
+            margin-bottom: 100px;
+        }
+
+        .table-wrapper {
+            margin-top: 20px;
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #FFF3E3;
+            color: #856404;
+            font-weight: bold;
+        }
+
+        td {
+            min-height: 50px;
+            line-height: 1.5;
+        }
+
+        .button {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .disabled-button {
+            color: #ccc;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .padding {
+            padding: 10px;
+        }
+
+        .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+        .plain-close-btn {
+    margin-left: 200px; /* Pushes the button to the right */
+    background: none; /* Remove any background */
+    border: none; /* Remove any border */
+    color: inherit; /* Inherit the text color from parent */
+    font-size: 24px; /* Set font size for the close icon */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    padding: 0; /* Remove any padding */
+    line-height: 1; /* Adjust line height for vertical alignment */
+}
+
+.plain-close-btn:hover {
+    color: #c70000; /* Change color on hover if desired */
+    background-color: #FFFFFF;
+    /* You can add more hover effects if needed */
+}
+
+        /* In your CSS file (e.g., notification.css) */
+.notification-popover {
+    color: black; /* Set the text color to black */
+}
+
+.notification-popover-header h5 {
+    color: black; /* Ensure the header text is also black */
+}
+
+.notifications {
+    color: black; /* Set the color for the notification list */
+}
+
+.notification-item p {
+    color: black; /* Set color for the notification message */
+}
+
+.notification-item small {
+    color: gray; /* Optional: Set a different color for the timestamp */
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                <span class="logoname">Chairable</span>
+            </div>
+            <ul class="nav-links">       
+                <li><a href="{{ url_for('accounts') }}">Buyers</a></li> 
+                <li><a href="{{ url_for('admin_users') }}">Sellers</a></li>
+                <li><a href="{{ url_for('approvals') }}">Approvals</a></li>
+                <li><a href="{{ url_for('admin_user_archive') }}">Archive</a></li>
+                <li><a href="{{ url_for('admin_commissions') }}">Commissions</a></li>
+            </ul>
+            <div class="icon-container">
+                <a href="#" id="message-icon" aria-label="Messages">
+                    <i class="fas fa-comments"></i> <!-- Font Awesome comments icon -->
+                </a>
+            <div class="icon-container">
+                <div class="user-profile">
+                    <a href="#" aria-label="User Profile"><i class="fas fa-user"></i></a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('logout') }}" aria-label="Log Out">Log Out</a>
+                    </div>
+                </div>
+                <a href="#" id="notification-icon" aria-label="Notifications">
+                    <i class="fas fa-bell"></i>
+                </a>
+            </div>
+        </nav>
+
+        <div id="chat-popover" class="chat-popover" style="visibility: hidden; opacity: 0;">
+            <div id="loading-spinner" style="display: none;">Loading...</div>
+            <div class="user-list-container">
+                <input
+                    type="text"
+                    id="user-search-input"
+                    placeholder="Search users..."
+                    class="user-search-input"
+                />
+                <div id="user-list"></div> <!-- This is where the users will be populated -->
+            </div>
+            <div class="input-container">
+                <div id="chat-messages" class="chat-messages">
+                    <!-- Messages will be loaded here -->
+                    <div id="typing-indicator" style="display: none;">User  is typing...</div>
+                </div>
+                <input type="text" id="message-input" placeholder="Type your message...">
+                <button id="send-message">Send</button>
+            </div>
+        </div>
+<!-- Notification Popover -->
+<div id="notification-popover" class="notification-popover">
+    <div class="notification-popover-header">
+        <h5>Notifications</h5>
+        <button id="delete-button" class="button">
+            <i class="fas fa-trash-alt"></i>
+            <span class="visually-hidden">Delete</span> <!-- Visually hidden text -->
+        </button>
+    </div>
+    <ul class="notifications">
+        {% for notification in notifications %}
+            <li>
+                <div class="notification-item">
+                    <p>{{ notification[1] }} 
+                    <small>
+                        {% if notification[3] %}
+                            ({{ notification[3].strftime('%Y-%m-%d %H:%M:%S') }})
+                        {% else %}
+                            (Date not available)
+                        {% endif %}
+                    </small></p>
+                    <label>
+                        <input type="checkbox" class="notification-checkbox" data-id="{{ notification[0] }}">
+                        <span class="visually-hidden">Notification {{ notification[1] }}</span>
+                    </label>
+                </div>
+            </li>
+        {% else %}
+            <li>No notifications.</li>
+        {% endfor %}
+    </ul>
+</div>
+</header>   
+    <main>
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="flashes">
+                        {% for category, message in messages %}
+                            <li class="{{ category }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Gender</th>
+                            <th>Country</th>
+                            <th>Business Permit</th>
+                            <th>Valid ID</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user[1] }}</td>
+                                <td>{{ user[2] }}</td>
+                                <td>{{ user[3] }}</td>
+                                <td>{{ user[4] }}</td>
+                                <td>
+                                    {% if user[5] %}
+                                        <a href="/uploads/business_permit/{{ user[5] }}" target="_blank" class="button">View Permit</a>
+                                    {% else %}
+                                        <span class="disabled-button">No Permit</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if user[6] %}
+                                        <a href="/uploads/valid_id/{{ user[6] }}" target="_blank" class="button">View ID</a>
+                                    {% else %}
+                                        <span class="disabled-button">No ID</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ user[7] }}</td>
+                                <td>
+                                    {% if user[7] != 'approved' %}
+                                        <form action="{{ url_for('approve_user2', user_id=user[0]) }}" method="POST" style="display:inline;">
+                                            <input type="hidden" name="approval_type" value="{{ 'seller' if user[5] == 'seller_pending' else 'user' }}">
+                                            <input type="submit" value="Approve" class="button" onclick="return confirm('Are you sure you want to approve this user?');">
+                                        </form>
+                                    {% else %}
+                                        <span class="disabled-button">Already Approved</span>
+                                    {% endif %}
+                                    {% if user[5] != 'admin' %}
+                                        <form action="{{ url_for('admin_archive_user', user_id=user[0]) }}" method="POST" class="action-form">
+                                            <input type="submit" value="Archive" class="button" onclick="return confirm('Are you sure you want to archive this user?');">
+                                        </form>
+                                    {% else %}
+                                        <span class="disabled-button">Cannot Archive Admin</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="button" onclick="window.location.href='{{ url_for('admin_user_archive') }}';">View Archive</button>
+        </div>
+    </main>
+    <script src="{{ url_for('static', filename='js/notification.js') }}"></script> <!-- Include notification JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.notification-checkbox');
+            const deleteButton = document.getElementById('delete-button');
+    
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    // Check if any checkbox is checked
+                    const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+                    
+                    // Show or hide the delete button based on the checked state
+                    deleteButton.style.display = anyChecked ? 'inline-block' : 'none';
+                });
+            });
+        });
+
+        function showChatPopover() {
+            const chatPopover = document.getElementById('chat-popover');
+            chatPopover.style.visibility = 'visible'; // Make the popover visible
+            chatPopover.style.opacity = '1'; // Make the popover fully opaque
+        
+            // Load users when the chat popover is shown
+            fetchUsers(); // Call fetchUsers to populate the user list
+        }
+        
+        // Function to hide the chat popover
+        function hideChatPopover() {
+            const chatPopover = document.getElementById('chat-popover');
+            chatPopover.style.visibility = 'hidden';
+            chatPopover.style.opacity = '0';
+        }
+        
+        // Show the chat popover when the message icon is clicked
+        document.getElementById('message-icon').addEventListener('click', function() {
+            showChatPopover(); // Show the chat popover regardless of user selection
+        });
+        
+        
+        // Hide chat popover when clicking outside of it
+        document.addEventListener('click', function(event) {
+            const chatPopover = document.getElementById('chat-popover');
+            const messageIcon = document.getElementById('message-icon');
+        
+            // Check if the click was outside the chat popover and the message icon
+            if (!chatPopover.contains(event.target) && !messageIcon.contains(event.target)) {
+                hideChatPopover(); // Call function to hide the popover
+            }
+        });
+    </script>
+    
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>        
+</body>
+</html>

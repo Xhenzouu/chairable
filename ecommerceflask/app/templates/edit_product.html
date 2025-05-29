@@ -1,0 +1,103 @@
+<!-- edit_product.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/regform.css') }}">
+</head>
+<body>
+    <div class="registration-container">
+        <h1>Edit Product</h1>       
+        {% if message %}
+        <div class="message center-message">{{ message }}</div>
+        {% endif %}       
+    <form method="POST">
+        <label for="name">Product Name:</label>
+        <input type="text" id="name" name="name" value="{{ product[1] }}" required placeholder="Enter product name"><br>
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" value="{{ product[2] }}" required step="0.01" placeholder="Enter price"><br>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required placeholder="Enter product description">{{ product[3] }}</textarea><br>
+
+        <label for="discount_percentage">Discount Percentage:</label>
+        <input type="number" id="discount_percentage" name="discount_percentage" value="{{ product[4] }}" step="0.01" placeholder="Enter discount percentage"><br>
+
+        <label for="stock">Stock Quantity:</label>
+        <input type="number" id="stock" name="stock" value="{{ product[5] }}" required placeholder="Enter stock quantity"><br>
+
+        <label for="sku">SKU:</label>
+        <input type="text" id="sku" name="sku" value="{{ product[6] }}" required placeholder="Enter SKU"><br>
+
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category" value="{{ product[7] }}" required placeholder="Enter category"><br>
+
+        <label for="subcategory">Subcategory:</label>
+        <input type="text" id="subcategory" name="subcategory" value="{{ product[8] }}" placeholder="Enter subcategory"><br>
+
+        <label for="variant">Variant:</label>
+        <input type="text" id="variant" name="variant" value="{{ product[9] }}" placeholder="Enter variant"><br>
+
+        <label for="image_url">Image URL:</label>
+        <input type="text" id="image_url" name="image_url" value="{{ product[10] }}" placeholder="Enter image URL"><br>
+
+        <label for="additional_images">Additional Images:</label>
+        <input type="text" id="additional_images" name="additional_images" value="{{ product[11] }}" placeholder="Enter additional images"><br>
+
+        <label for="material">Material:</label>
+        <input type="text" id="material" name="material" value="{{ product[12] }}" placeholder="Enter material"><br>
+
+        <label for="dimensions">Dimensions:</label>
+        <input type="text" id="dimensions" name="dimensions" value="{{ product[13] }}" placeholder="Enter dimensions"><br>
+
+        <label for="weight">Weight:</label>
+        <input type="number" id="weight" name="weight" value="{{ product[14] }}" step="0.01" placeholder="Enter weight"><br>
+
+        <label for="shipping_weight">Shipping Weight:</label>
+        <input type="number" id="shipping_weight" name="shipping_weight" value="{{ product[15] }}" step="0.01" placeholder="Enter shipping weight"><br>
+
+        <label for="shipping_dimensions">Shipping Dimensions:</label>
+        <input type="text" id="shipping_dimensions" name="shipping_dimensions" value="{{ product[16] }}" placeholder="Enter shipping dimensions"><br>
+
+        <label for="indoor_outdoor">Indoor/Outdoor:</label>
+        <input type="text" id="indoor_outdoor" name="indoor_outdoor" value="{{ product[17] }}" placeholder="Enter indoor/outdoor"><br>
+
+        <label for="color">Color:</label>
+        <input type="text" id="color" name="color" value="{{ product[18] }}" placeholder="Enter color"><br>
+
+        <label for="brand">Brand:</label>
+        <input type="text" id="brand" name="brand" value="{{ product[19] }}" placeholder="Enter brand"><br>
+
+        <label for="warranty">Warranty:</label>
+        <input type="text" id="warranty" name="warranty" value="{{ product[20] }}" placeholder="Enter warranty"><br>
+
+        <label for="seller_id">Seller ID:</label>
+        <input type="number" id="seller_id" name="seller_id" value="{{ product[21] }}" required placeholder="Enter seller ID"><br>
+
+        <label for="tags">Tags (comma separated):</label>
+        <input type="text" id="tags" name="tags" value="{{ ', '.join(product.tags) }}" placeholder="Enter tags"><br>
+
+        <label for="is_on_sale">On Sale:</label>
+        <input type="checkbox" id="is_on_sale" name="is_on_sale" value="true" {% if product[23] %}checked{% endif %}><br>
+
+        <label for="approval_status">Approval Status:</label>
+        <input type="text" id="approval_status" name="approval_status" value="{{ product[24] }}" placeholder="Enter approval status"><br>
+
+        <label for="admin_comments">Admin Comments:</label>
+        <textarea id="admin_comments" name="admin_comments" placeholder="Enter admin comments">{{ product[25] }}</textarea><br>
+
+        <label for="display_status">Display Status:</label>
+        <input type="text" id="display_status" name="display_status" value="{{ product[26] }}" placeholder="Enter display status"><br>
+
+        <button type="submit">Update Product</button>
+    </form>
+    <a href="{{ url_for('manage_products') }}">Cancel</a>
+</body>
+</html>

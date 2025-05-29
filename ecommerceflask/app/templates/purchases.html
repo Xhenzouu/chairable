@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Purchases</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/popover.css') }}">
+</head>
+<body>
+    <header>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+            <nav class="navbar">
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                    <span class="logoname">Chairable</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="index" class="back-to-home">Home</a></li>
+                    <li><a href="#shop">Shop</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="icon-container">
+                    <a href="#" aria-label="User  Profile"><i class="fas fa-user"></i></a>
+                    <a href="#" aria-label="Search"><i class="fas fa-search"></i></a>
+                    <a href="#" aria-label="Favorites"><i class="fas fa-heart"></i></a>
+                    <a href="#" id="cart-icon" aria-label="Shopping Cart"><i class="fas fa-shopping-cart"></i></a>
+                </div>
+            </nav>
+        </header>
+
+        <div class="container mt-4">
+            <h1>Your Purchase History</h1>
+            <div class="purchases">
+                <div class="card p-4">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Order Number</th>
+                                        <th class="text-center">Product</th>
+                                        <th class="text-center">Quantity</th>
+                                        <th class="text-center">Price</th>
+                                        <th class="text-center">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center">#12345</td>
+                                        <td>
+                                            <img src="{{ url_for('static', filename='images/product1.png') }}" alt="Product Image" class="product-img">
+                                            <span class="product-name">Product Name</span>
+                                        </td>
+                                        <td>1</td>
+                                        <td>$99.00</td>
+                                        <td>$99.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center">#12346</td>
+                                        <td>
+                                            <img src="{{ url_for('static', filename='images/product2.png') }}" alt="Product Image" class="product-img">
+                                            <span class="product-name">Product Name</span>
+                                        </td>
+                                        <td>2</td>
+                                        <td>$49.50</td>
+                                        <td>$99.00</td>
+                                    </tr>
+                                    <!-- Repeat for other purchases -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card cart-totals-card p-3">
+                                <h5 class="text-primary">Total Purchases</h5>
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <th>Total</th>
+                                            <td>$198.00</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Shipping</th>
+                                            <td>$10.00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="cart-total-fixed">
+                                    <h6>Grand Total <span class="float-right">$208.00</span></h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <!-- Your footer content here -->
+        </footer>
+
+        <script src="{{ url_for('static', filename='js/popover.js') }}"></script>
+    </body>
+</html>

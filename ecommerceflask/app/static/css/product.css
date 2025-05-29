@@ -1,0 +1,217 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Change font for better aesthetics */
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+header {
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 50px;
+    margin-right: 10px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+}
+
+.nav-links li {
+    margin: 0 15px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s; /* Add transition for smooth hover effect */
+}
+
+.nav-links a:hover {
+    color: #e67e22; /* Change color on hover */
+}
+
+.icon-container a {
+    margin-left: 15px;
+    color: #333;
+    transition: color 0.3s; /* Add transition for smooth hover effect */
+}
+
+.icon-container a:hover {
+    color: #e67e22; /* Change color on hover */
+}
+
+.container {
+    max-width: 1200px; /* Set a max width to control layout on larger screens */
+    margin: 0 auto; /* Center the container */
+    padding: 20px; /* Add padding on all sides */
+}
+
+.product-page {
+    display: flex;
+    padding: 20px;
+    background-color: #fff; /* Ensure product page background is white */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.product-images {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.main-image {
+    width: 100%;
+    border-radius: 8px;
+    transition: transform 0.3s; /* Add transition for zoom effect */
+}
+
+.main-image:hover {
+    transform: scale(1.05); /* Zoom effect on hover */
+}
+
+.thumbnail-images {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.thumbnail-images img {
+    width: 23%;
+    border-radius: 8px;
+    transition: transform 0.3s; /* Add transition for zoom effect */
+}
+
+.thumbnail-images img:hover {
+    transform: scale(1.05); /* Zoom effect on hover */
+}
+
+.product-details {
+    flex: 1;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.price {
+    font-size: 24px;
+    color: #e67e22; /* Orange color */
+    margin: 10px 0;
+    text-align: left;
+}
+
+.rating {
+    margin: 10px 0;
+    color: #e67e22; /* Set rating color */
+}
+
+.description {
+    margin: 10px 0;
+    line-height: 1.5; /* Increase line height for better readability */
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+select,
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    transition: border-color 0.3s; /* Add transition for smooth focus effect */
+}
+
+select:focus,
+input[type="number"]:focus {
+    border-color: #e67e22; /* Change border color on focus */
+    outline: none; /* Remove outline on focus */
+}
+
+.add-to-cart,
+.compare {
+    background-color: #e67e22; /* Orange color */
+    color: #fff;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 48%;
+    transition: background-color 0.3s; /* Add transition for smooth hover effect */
+}
+
+.add-to-cart:hover,
+.compare:hover {
+    background-color: #d95d11; /* Darken the button color on hover */
+}
+
+.additional-info,
+.share {
+    margin-top: 20px;
+}
+
+.share a {
+    margin-right: 15px;
+    text-decoration: none;
+    color: #333; /* Default color */
+    transition: color 0.3s; /* Add transition for smooth hover effect */
+}
+
+.share a:hover {
+    color: #e67e22; /* Change color on hover */
+}
+
+footer {
+    background-color: #fff; /* Ensure footer has white background */
+    padding: 20px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.footer-section {
+    flex: 1;
+    margin: 0 15px;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+}
+
+.footer-logo-img {
+    width: 50px;
+    margin-right: 10px;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    color: #777; /* Light color for footer text */
+}

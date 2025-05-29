@@ -1,0 +1,44 @@
+.pagination {
+    padding: 10px;
+    border-radius: 15px; /* Consistent with filter section */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination .page-link {
+    color: #B88E2F; /* Use brand color */
+    border-radius: 5px; /* Rounded corners for buttons */
+    padding: 10px;
+    margin: 0 5px; /* Space between pagination buttons */
+    background-color: white; /* White background for pagination buttons */
+    transition: background-color 0.3s, color 0.3s; /* Smooth hover transition */
+    background-color: #FFF3E3; /* Match filter section background */
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #B88E2F; /* Active button background */
+    color: white; /* Active button text color */
+}
+
+.pagination .page-link:hover {
+    background-color: #B88E2F; /* Hover background */
+    color: white; /* Hover text color */
+}
+
+.pagination .page-item.disabled .page-link {
+    background-color: #f1f3c2; /* Light background for disabled state */
+    color: #999; /* Grey out the disabled text */
+    cursor: not-allowed; /* Indicate disabled with cursor */
+}
+
+/* Responsive pagination for mobile */
+@media (max-width: 600px) {
+    .pagination {
+        flex-direction: column; /* Stack pagination buttons vertically */
+    }
+
+    .pagination .page-link {
+        margin-bottom: 10px; /* Space between stacked pagination buttons */
+    }
+}

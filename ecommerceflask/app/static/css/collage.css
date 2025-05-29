@@ -1,0 +1,63 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.image-collage {
+    width: 100%; /* Full width */
+    margin: 0; /* No margin */
+    padding: 20px; /* Optional padding */
+    position: relative; /* Relative positioning for absolute children */
+}
+
+.image-wrapper {
+    display: flex; /* Use flexbox for a flexible layout */
+    flex-wrap: wrap; /* Allow items to wrap */
+    justify-content: center; /* Center align images */
+}
+
+.image-wrapper img {
+    position: relative; /* Allow for absolute positioning of individual images */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+    transition: transform 0.3s; /* Smooth scaling on hover */
+}
+
+.image-wrapper img:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Define sizes for different classes */
+.large {
+    width: calc(60% - 10px); /* Larger images take up more space */
+    margin: 5px; /* Space around larger images */
+}
+
+.medium {
+    width: calc(30% - 10px); /* Medium images */
+    margin: 5px; /* Space around medium images */
+}
+
+.small {
+    width: calc(20% - 10px); /* Smaller images */
+    margin: 5px; /* Space around small images */
+}
+
+/* Ensure that the images maintain their aspect ratio */
+.image-wrapper img {
+    height: auto; /* Maintain aspect ratio */
+    object-fit: cover; /* Cover the image area */
+}
+
+/* Media query for responsive design */
+@media (max-width: 768px) {
+    .image-wrapper img {
+        flex: 1 1 45%; /* Adjust for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .image-wrapper img {
+        flex: 1 1 100%; /* Single column on very small screens */
+    }
+}

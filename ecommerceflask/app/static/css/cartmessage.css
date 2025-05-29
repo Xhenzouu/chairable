@@ -1,0 +1,51 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 200; /* Ensure it's above other content */
+    visibility: hidden; /* Hidden by default */
+    opacity: 0; /* Fully transparent */
+    transition: visibility 0s, opacity 0.5s; /* Smooth transition */
+}
+
+.overlay.visible {
+    visibility: visible; /* Show when this class is added */
+    opacity: 1; /* Fully opaque */
+}
+
+.overlay-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the overlay */
+    background-color: white; /* White background for the message container */
+    padding: 40px; /* Padding for the content */
+    border-radius: 20px; /* Smooth edges */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    width: 300px; /* Fixed width for consistency */
+    text-align: center; /* Center text */
+}
+
+.message-container {
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: column; /* Stack icon and text vertically */
+    align-items: center; /* Center items horizontally */
+}
+
+.overlay-content i {
+    font-size: 60px; /* Medium size for the checkmark */
+    color: green; /* Green color for the checkmark */
+    margin-bottom: 15px; /* Space below the icon */
+}
+
+.overlay-content p {
+    font-size: 18px; /* Font size for the message */
+    color: #333; /* Dark gray color for the text */
+    margin: 0; /* Remove default margin */
+    background-color: white; /* Ensure text background is white */
+    padding: 10px; /* Padding for the text */
+    border-radius: 10px; /* Smooth edges for text background */
+}

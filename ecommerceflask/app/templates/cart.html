@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/popover.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Add this style section in your cart.html head -->
+    <style>
+        .icon-button {
+            transition: all 0.3s ease;
+            background: none;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+       .icon-button:hover {
+            transform: scale(1.2);
+            background: none;
+        }
+
+      .icon-button i {
+            color: #856404;  /* Your specified color */
+            transition: all 0.3s ease;
+        }
+
+        .icon-button:hover i {
+            color: #dc3545;  /* Changes to red on hover */
+        }
+
+        .icon-button:focus,
+        .icon-button:active {
+            background: none;
+            outline: none;
+            box-shadow: none;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 4px;
+            font-size: 14px;
+        }
+
+        .quantity-input::-webkit-inner-spin-button,
+        .quantity-input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .quantity-btn {
+            padding: 2px 8px;
+            font-size: 12px;
+        }
+
+        .quantity-btn i {
+            color: #856404;
+        }
+
+        .quantity-btn:hover i {
+            color: #dc3545;
+        }
+</style> 
+</head>
+<body>
+    <header>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                <span class="logoname">Chairable</span>
+            </div>
+            <ul class="nav-links">
+                <!-- Use url_for to generate links to the routes -->
+                <li><a href="index" class="back-to-home">Home</a></li>
+                <li><a href="{{ url_for('shop') }}">Shop</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="icon-container">
+                <a href="#" aria-label="User Profile"><i class="fas fa-user"></i></a>
+                <a href="#" aria-label="Search"><i class="fas fa-search"></i></a>
+                <a href="#" aria-label="Favorites"><i class="fas fa-heart"></i></a>
+                <a href="#" id="cart-icon" aria-label="Shopping Cart"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </nav>
+    </header>
+        <div id="cart-popover" class="cart-popover">
+            <div class="cart-popover-header">
+                <h5>Shopping Cart</h5>
+                <button class="close-btn" id="close-cart-btn">&times;</button>
+            </div>
+            <div class="cart-items">
+            </div>
+            <div class="cart-summary">
+                <div class="subtotal-row">
+                    <p class="text-left">Subtotal:</p> 
+                    <span class="price">₱{{ "%.2f"|format(subtotal) }}</span>
+                </div>                
+                <div class="cart-buttons">
+                    <button class="btn cart-btn">Cart</button>
+                    <button class="btn cart-btn">Checkout</button>
+                    <button class="btn cart-btn">Comparison</button>
+                </div>
+            </div>
+        </div>
+        <div id="overlay" class="overlay"></div>
+        <div class="container mt-4">
+            <div class="cart">
+                <div class="card p-4">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center"></th> <!-- Header for images -->
+                                        <th class="text-center">Product</th>
+                                        <th class="text-center">Quantity</th>
+                                        <th class="text-center">Price</th>
+                                        <th class="text-center">Subtotal</th>
+                                        <th class="text-center"></th> <!-- For action buttons -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if cart_items %}
+                                        {% for item in cart_items %}
+                                        <tr>
+                                            <td class="text-center">
+                                                <img src="{{ item.image_url }}" alt="{{ item.name }}" class="cart-item-image">
+                                            </td>
+                                            <td class="text-center">{{ item.name }}</td>
+                                            <td class="text-center">
+                                                <div class="quantity-controls">
+                                                <button type="button" 
+                                                        class="icon-button quantity-btn" 
+                                                        onclick="updateQuantity('${item.id}', 'decrease')"
+                                                        title="Decrease quantity"
+                                                        aria-label="Decrease quantity for ${item.name}">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                                <input type="number" 
+                                                       class="quantity-input" 
+                                                       value="${item.quantity}" 
+                                                       min="1" 
+                                                       max="99"
+                                                       data-id="${item.id}"
+                                                       onchange="updateQuantity('${item.id}', 'input', this.value)"
+                                                       title="Product quantity"
+                                                       aria-label="Quantity for ${item.name}"
+                                                       id="quantity-${item.id}"
+                                                       name="quantity-${item.id}">
+                                                <button type="button" 
+                                                        class="icon-button quantity-btn" 
+                                                        onclick="updateQuantity('${item.id}', 'increase')"
+                                                        title="Increase quantity"
+                                                        aria-label="Increase quantity for ${item.name}">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                            </td>                                            
+                                            <td class="text-center">₱{{ "%.2f"|format(item.price) }}</td>
+                                            <td class="text-center">₱{{ "%.2f"|format(item.price * item.quantity) }}</td>
+                                            <!-- Subtotal is the same as price for 1 item -->
+                                            <td class="text-center">
+                                                <button type="button" 
+                                                        class="icon-button" 
+                                                        data-id="{{ item.id }}" 
+                                                        title="Remove item"
+                                                        aria-label="Remove {{ item.name }} from cart">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="6" class="text-center">Your cart is empty.</td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                            <button onclick="cleanCart()" class="btn btn-secondary">Clean Cart</button>
+                        </div>                        
+                        <div class="col-md-4">
+                            <div class="card cart-totals-card p-3">
+                                <h5 class="text-primary">Cart Totals</h5>
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <th>Subtotal</th>
+                                            <td><span id="subtotal">₱0.00</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Shipping</th>
+                                            <td><span id="shipping">₱0.00</span></td>
+                                        </tr>                                    
+                                    </tbody>
+                                </table>
+                                
+                                <div class="cart-total-fixed">
+                                    <h6>Total Price <span id="total">₱0.00</span></h6>
+                                    <button id="checkout-btn" class="btn btn-primary">Proceed to Checkout</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <footer>
+            <div class="footer-container">
+                <div class="footer-logo">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="footer-logo-img">
+                    <span class="footer-logoname">Chairable</span>
+                </div>
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <div class="social-media">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Help</h3>
+                    <ul>
+                        <li><a href="#faq">FAQ</a></li>
+                        <li><a href="#shipping">Shipping Information</a></li>
+                        <li><a href="#returns">Returns & Exchanges</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to our newsletter for the latest updates and offers:</p>
+                    <form action="#" method="post" class="newsletter-form">
+                        <input type="email" placeholder="Your Email" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+                <div class="footer-section">
+                    <h3>About Us</h3>
+                    <p>Learn more about our company, values, and mission.</p>
+                    <a href="#about" class="btn">Read More</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Chairable. All rights reserved.</p>
+            </div>
+        </footer>
+    
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const checkoutBtn = document.getElementById('checkout-btn');
+        
+                checkoutBtn.addEventListener('click', (event) => {
+                    // Flag to track if validation passes
+                    let isValid = true;
+        
+                    // Loop through all quantity inputs
+                    document.querySelectorAll('.quantity-input').forEach(input => {
+                        const quantity = parseInt(input.value, 10);
+        
+                        // Validate quantity
+                        if (isNaN(quantity) || quantity < 1) {
+                            isValid = false;
+                            alert(`Invalid quantity detected for a product. Quantity must be at least 1.`);
+                            
+                            // Reset invalid input to 1
+                            input.value = 1;
+                        }
+                    });
+        
+                    // Stop navigation if validation fails
+                    if (!isValid) {
+                        event.preventDefault(); // Stops the default button behavior
+                        event.stopImmediatePropagation(); // Ensures no other events trigger
+                        return false; // Explicitly stops further execution
+                    }
+        
+                    // If valid, show a success message (optional)
+                    
+                });
+            });
+        </script>
+        <script src="{{ url_for('static', filename='js/popover.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+    </body>
+</html>

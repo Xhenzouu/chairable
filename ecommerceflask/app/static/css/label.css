@@ -1,0 +1,13 @@
+.label-section {
+    text-align: center; /* Center-aligns the text */
+    padding: 20px; /* Optional padding for spacing */
+}
+
+.label-section h2 {
+    margin: 0 0 10px; /* Optional margin adjustments */
+    font-weight: 900;
+}
+
+.label-section p {
+    margin: 0; /* Removes any default margin */
+}

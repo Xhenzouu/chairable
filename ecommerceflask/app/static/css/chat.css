@@ -1,0 +1,187 @@
+#chat-popover {
+    display: flex; /* Make the popover a flex container */
+    flex-direction: row; /* Arrange children in a row */
+    height: auto; /* Auto height based on content */
+    max-height: 600px; /* Max height for the popover */
+    overflow-y: auto; /* Enable scrolling for the items if they exceed max height */
+    position: fixed;
+    right: 20px; /* Position from the right */
+    top: 70px; /* Position from the top */
+    width: 450px; /* Width for the chat popover */
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    z-index: 300; /* Ensure it appears above other content */
+    border-radius: 10px;
+    visibility: hidden; /* Hidden by default */
+    opacity: 0; /* Fully transparent */
+    transition: visibility 0s, opacity 0.3s linear;
+}
+
+
+.user-list-container {
+    margin-right: 15px; /* Space between user list and chat messages */
+    display: flex; /* Make it a flex container */
+    flex-direction: column; /* Stack user buttons vertically */
+    width: 190px; /* Set a fixed width for the user list */
+    align-items: flex-start; /* Align items to the left */
+    max-height: 600px; /* Set a maximum height for the user list */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds max height */
+}
+
+.user-search-input {
+    flex-shrink: 0; /* Ensure it doesn't shrink */
+    width: 100%; /* Full width */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.user-list-container h4 {
+    margin: 0 0 10px; /* Margin for the heading */
+    text-align: left; /* Align heading text to the left */
+}
+
+.user-button {
+    text-align: center; /* Align button text to the left */
+    width: 100%; /* Make buttons full width */
+    padding: 10px; /* Add padding for better click area */
+    background-color: #c68f44; /* Set a blue background color */
+    color: #FFF3E3; /* Set text color to white for contrast */
+    border: none; /* Remove border */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 4px; /* Optional: Add rounded corners */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.user-button:hover {
+    color: #c68f44; /* Set text color to white for contrast */
+    background-color: #FFF3E3; /* Set text color to white for contrast */
+    font-weight: bold;
+}
+
+.chat-messages {
+    flex-grow: 1; /* Allow messages to take available space */
+    overflow-y: auto; /* Enable scrolling if messages exceed height */
+    overflow-x: hidden; /* Prevent horizontal overflow */
+    margin-bottom: 10px; /* Space below the messages */
+    display: flex; /* Enable flexbox for message alignment */
+    flex-direction: column; /* Stack messages vertically */
+    position: relative; /* Allow positioning of child elements */
+    max-width: 100%; /* Constrain to parent width */
+}
+
+#typing-indicator {
+    position: absolute; /* Position it absolutely */
+    bottom: 0; /* Align it to the bottom */
+    left: 0; /* Align it to the left */
+    right: 0; /* Align it to the right */
+    padding: 5px; /* Add some padding */
+    background-color: rgba(255, 255, 255, 0.8); /* Optional: Background color for visibility */
+    text-align: center; /* Center the text */
+    display: none; /* Initially hidden */
+}
+
+.message {
+    display: flex;
+    flex-direction: column;
+    min-width: 50px; /* Set a minimum width */
+    max-width: 70%; /* Limit the width of the message bubbles */
+    padding: 10px; /* Padding inside the message bubble */
+    border-radius: 10px; /* Rounded corners for message bubbles */
+    margin: 5px 0; /* Space between messages */
+    word-wrap: break-word; /* Allow long words to break */
+    overflow-wrap: break-word; /* CSS3 property for better compatibility */
+    word-break: break-all; /* Force long words to break */
+    border-style: hidden;
+}
+
+.sender-message {
+    align-self: flex-end; /* Align to the right */
+    background-color: #c68f44; /* Background color */
+    color: #FFF3E3; /* Text color */
+    border-color: none;
+}
+
+.sender-message .message-time {
+    font-size: 0.8em; /* Smaller font for timestamp */
+    color: #FFF3E3; /* Color for sender timestamp */
+    margin-top: 2px; /* Space above timestamp */
+}
+
+.receiver-message {
+    align-self: flex-start; /* Align to the left */
+    background-color: #FFF3E3; /* Background color */
+    color: #B88E2F; /* Text color */
+    border-color: none;
+}
+
+.receiver-message .message-time {
+    font-size: 0.8em; /* Smaller font for timestamp */
+    color: #B88E2F; /* Color for receiver timestamp */
+    margin-top: 2px; /* Space above timestamp */
+}
+
+.input-container {
+    display: flex; /* Use flexbox to stack items */
+    flex-direction: column; /* Stack children vertically */
+    margin: 5px 10px; /* Adjust margins for spacing */
+    padding-top: 0; /* Set to 0 or a positive value for spacing */
+    width: 100%; /* Ensure it takes full width of the parent */
+    max-width: 450px; /* Optional: Set a max width to prevent expansion */
+    box-sizing: border-box; /* Include padding in width calculations */
+}
+
+.sender-message, .receiver-message {
+    margin: 5px; /* Space between messages */
+    padding: 10px; /* Padding inside the message */
+}
+
+/* Optional: Add a clearfix to the chat container */
+.chat-messages::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+#message-input {
+    padding: 10px; /* Padding inside the input */
+    width: 100%; /* Full width */
+    box-sizing: border-box; /* Include padding in width calculations */
+}
+
+#send-message {
+    padding: 10px; /* Padding inside the button */
+    color: #FFF3E3; /* Set a blue background color */
+    background-color: #c68f44; /* Set a blue background color */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+#send-message:hover {
+    background-color: #FFF3E3; /* Set a blue background color */
+    color: #c68f44; /* Set text color to white for contrast */
+    font-weight: bold;
+}
+
+.button {
+    background-color: #FFF3E3; /* Set a blue background color */
+    color: #c68f44; /* Set text color to white for contrast */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    padding: 5px 10px; /* Padding inside the button */
+}
+
+.button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+.user-button.active {
+    background-color: #FFF3E3; /* Set a blue background color */
+    color: #c68f44; /* Set text color to white for contrast */
+    font-weight: bold; /* Make the text bold */
+    border-style: none;
+}

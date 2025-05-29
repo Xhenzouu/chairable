@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product.css') }}">   
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/showcaseproduct.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/popover.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cartmessage.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<style>
+    .subtotal-row {
+        margin-bottom: -5px; /* Adjust the value as needed */
+        margin-top: -5px; /* Adjust the value as needed */
+    }
+
+    .price {
+        margin-bottom: 10px; /* Adjust the value as needed */
+        display: inline-block; /* Ensures margin is applied correctly */
+    }
+
+    .cart-buttons {
+    display: flex; /* Use flexbox for button alignment */
+    justify-content: space-between; /* Space buttons evenly */
+    gap: 10px; /* Adds space between buttons */
+    }
+
+    .cart-btn {
+        flex: 1; /* Allow buttons to grow equally */
+        color: #000000;
+        background-color: white;
+        border: 1px solid #000000;
+        padding: 5px; /* Adjust padding for consistent height */
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 14px; /* Smaller font size */
+        margin: 0; /* Remove margin to avoid inconsistency */
+        line-height: 1; /* Ensures text is vertically centered */
+        min-width: 100px; /* Optional: Set a minimum width */
+        max-height: 30px; /* Set a maximum height */
+        height: 30px;
+    }
+
+    .cart-btn:hover {
+        background-color: #FFF3E3;
+        font-weight: bold;
+        color: #000;    
+    }
+
+    .action-buttons{
+        margin-top: 15px;
+    }
+</style>
+<body>
+    <header>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+            <nav class="navbar">
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                    <span class="logoname">Chairable</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('shop') }}">Shop</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                </ul>
+                <div class="icon-container">
+                    <a href="profile" aria-label="User Profile"><i class="fas fa-user"></i></a>
+                    <a href="{{ url_for('current_orders') }}" aria-label="Current Orders"><i class="fas fa-box"></i></a>
+                    <a href="#" aria-label="Favorites"><i class="fas fa-heart"></i></a>
+                    <a href="#" id="cart-icon" aria-label="Shopping Cart"><i class="fas fa-shopping-cart"></i></a>
+                </div>
+            </nav>
+        </header>
+
+    <!-- Cart Popover -->
+    <div id="cart-popover" class="cart-popover">
+        <div class="cart-popover-header">
+            <h5>Shopping Cart</h5>
+            <button class="close-btn" id="close-cart-btn">&times;</button>
+        </div>
+        <div class="cart-items">
+            <!-- Cart items will be dynamically injected here -->
+        </div>
+        <div class="cart-summary">
+            <div class="subtotal-row">
+                <p class="text-left">Subtotal:</p> 
+                <span class="price" id="subtotal" >PHP 0.00</span> <!-- Initial subtotal -->
+            </div>                
+            <div class="cart-buttons">
+                <button class="btn cart-btn" id="cart-btn">Cart</button>
+                <button class="btn cart-btn" id="checkout-btn">Checkout</button>
+                <button class="btn cart-btn">Comparison</button>
+            </div>
+        </div>
+    </div>
+    <div id="overlay" class="overlay"></div> 
+    
+        <main>
+            <div class="container">
+                <div class="product-page">
+                    <!-- Product Images Section -->
+                    <div class="product-images">
+                        {% if product['image_url'].startswith('http') %}
+                            <img src="{{ product['image_url'] }}" alt="{{ product['name'] }}" class="main-image">
+                        {% else %}
+                            <img src="{{ url_for('uploaded_file', filename=product['image_url'].split('/')[-1]) }}" alt="{{ product['name'] }}" class="main-image">
+                        {% endif %}
+                    </div>
+        
+                    <!-- Product Details Section -->
+                    <div class="product-details">
+                        <h1>{{ product['name'] }}</h1>
+                        <p class="price">PHP {{ product['price'] | round(2) }}</p>
+                        {% if product['is_on_sale'] %}
+                        <p class="sale-price">
+                            Sale Price: PHP {{ product['sale_price'] | default('N/A') if product['sale_price'] is none else product['sale_price'] | round(2) }}
+                          </p>
+                        {% endif %}
+                        <p class="description">{{ product['description'] }}</p>
+                        <div class="rating">
+                            {% set full_stars = product['rating'] // 1 %}  <!-- Use integer division to get full stars -->
+                            {% set half_star = product['rating'] % 1 >= 0.5 %}  <!-- Check for half star -->
+                            {% set total_stars = 5 %}
+                            
+                            {% for i in range(total_stars) %}
+                                {% if i < full_stars %}
+                                    <i class="fas fa-star"></i> <!-- Full star -->
+                                {% elif half_star and i == full_stars %}
+                                    <i class="fas fa-star-half-alt"></i> <!-- Half star -->
+                                {% else %}
+                                    <i class="far fa-star"></i> <!-- Empty star -->
+                                {% endif %}
+                            {% endfor %}
+                            ({{ product['rating'] }} / 5.0)
+                        </div>
+                        
+        
+                        <!-- Variant Options -->
+                        {% if product['variant'] %}
+                            <label for="variant">Variant:</label>
+                            <select id="variant">
+                                {% for variant in product['variant'].split(',') %}
+                                    <option value="{{ variant }}">{{ variant }}</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+        
+                        <!-- Color Options -->
+                        {% if product['color'] %}
+                            <label for="color">Color:</label>
+                            <select id="color">
+                                {% for color in product['color'].split(',') %}
+                                    <option value="{{ color }}">{{ color.capitalize() }}</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+        
+                        <div class="quantity">
+                            <label for="quantity-{{ product['id'] }}">Quantity:</label>
+                            <input 
+                                type="number" 
+                                id="quantity-{{ product['id'] }}" 
+                                value="1" 
+                                min="1" 
+                                max="{{ product['stock'] }}">
+                            <!-- Warning span for stock issues -->
+                            <span id="stock-warning-{{ product['id'] }}" style="display: none; color: red; font-size: 0.9em;" class="stock-warning">
+                                ⚠️ You cannot add more than the available stock!
+                            </span>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <a href="#" class="overlay-btn add-to-cart" 
+                        data-id="{{ product['id'] }}" 
+                        data-name="{{ product['name'] }}" 
+                        data-price="{{ product['price'] }}" 
+                        data-image="{{ product['image_url'] }}" 
+                        aria-label="Add {{ product['name'] }} to cart">
+                        Add to Cart
+                        </a>
+                        
+                        <!-- Additional Info -->
+                        <div class="additional-info">
+                            <p class="stock-status">
+                                <strong>Stock:</strong> 
+                                {% if product['stock'] > 0 %}
+                                    {{ product['stock'] }} available
+                                {% else %}
+                                    <span class="out-of-stock">Out of Stock</span>
+                                {% endif %}
+                            </p>
+                            <p><strong>SKU:</strong> {{ product['sku'] }}</p>
+                            <p><strong>Category:</strong> {{ product['category'] }}</p>
+                            <p><strong>Subcategory:</strong> {{ product['subcategory'] }}</p>
+                            {% if product['tags'] %}
+                                <p><strong>Tags:</strong> {{ product['tags'] | join(', ') }}</p>
+                            {% endif %}
+                            <p><strong>Availability:</strong> {{ product['availability_status'] }}</p>
+                        </div>
+        
+                        <!-- Share Links -->
+                        <div class="share">
+                            <p>Share:</p>
+                            <a href="#">Facebook</a>
+                            <a href="#">LinkedIn</a>
+                            <a href="#">Twitter</a>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Additional Information Section -->
+                <section class="additional-info">
+                    <h2>Product Details</h2>
+                    <p><strong class="description">Description: </strong>{{ product['description'] }}</p>
+                    <p><strong>Dimensions:</strong> {{ product['dimensions'] }}</p>
+                    <p><strong>Material:</strong> {{ product['material'] }}</p>
+                    <p><strong>Weight:</strong> {{ product['weight'] }} kg</p>
+                    {% if product['power_source'] %}
+                        <p><strong>Power Source:</strong> {{ product['power_source'] }}</p>
+                    {% endif %}
+                    {% if product['warranty'] %}
+                        <p><strong>Warranty:</strong> {{ product['warranty'] }}</p>
+                    {% endif %}
+                </section>
+        
+                <!-- Reviews Section -->
+                <section class="reviews">
+                    <h2>Customer Reviews</h2>
+                    <div class="review-summary">
+                        <p><strong>Reviews:</strong> {{ product['reviews'] }}</p>
+                    </div>
+                </section>
+            </div>
+        </main>
+        
+
+        <section class="product-showcase">
+            <h2 class="section-title">More Products</h2>
+            <div class="product-grid">
+                <!-- First Row: Products 1-4 -->
+                <div class="product">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product1.png') }}" alt="Product 1">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>                       
+                         </div>
+                    </div>
+                    <h3>Product 1</h3>
+                    <p class="description">This is a short description of Product 1.</p>
+                    <p>$29.99</p>
+                </div>
+                <div class="product">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product2.png') }}" alt="Product 2">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Product 2</h3>
+                    <p class="description">This is a short description of Product 2.</p>
+                    <p>$8.00</p>
+                </div>
+                <div class="product">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product3.png') }}" alt="Product 3">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Product 3</h3>
+                    <p class="description">This is a short description of Product 3.</p>
+                    <p>$15.00</p>
+                </div>
+                <div class="product">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product4.png') }}" alt="Product 4">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Product 4</h3>
+                    <p class="description">This is a short description of Product 4.</p>
+                    <p>$20.00</p>
+                </div>
+                
+                <!-- Second Row: Products 5-8 (hidden initially) -->
+                <div class="product hidden">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product5.png') }}" alt="Product 5">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Product 5</h3>
+                    <p class="description">This is a short description of Product 5.</p>
+                    <p>$25.00</p>
+                </div>
+                <div class="product hidden">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product6.png') }}" alt="Product 6">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Product 6</h3>
+                    <p class="description">This is a short description of Product 6.</p>
+                    <p>$30.00</p>
+                </div>
+                <div class="product hidden">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product7.png') }}" alt="Product 7">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Product 7</h3>
+                    <p class="description">This is a short description of Product 7.</p>
+                    <p>$35.00</p>
+                </div>
+                <div class="product hidden">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product8.png') }}" alt="Product 8">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Product 8</h3>
+                    <p class="description">This is a short description of Product 8.</p>
+                    <p>$40.00</p>
+                </div>
+            </div>
+        
+            <div class="button-container">
+                <a href="#" class="show-more" id="showMoreButton">Show More</a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="footer-logo-img">
+                <span class="footer-logoname">Chairable</span>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-media">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Help</h3>
+                <ul>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#shipping">Shipping Information</a></li>
+                    <li><a href="#returns">Returns & Exchanges</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to our newsletter for the latest updates and offers:</p>
+                <form action="#" method="post" class="newsletter-form">
+                    <input type="email" placeholder="Your Email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <p>Learn more about our company, values, and mission.</p>
+                <a href="#about" class="btn">Read More</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Chairable. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="item-added-overlay" class="overlay">
+        <div class="overlay-content">
+            <div class="message-container">
+                <i class="fas fa-check-circle"></i>
+                <p>Item added to cart!</p>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/item.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popover.js') }}"></script>
+</body>
+</html>

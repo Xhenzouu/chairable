@@ -1,0 +1,141 @@
+/* General Styles for Filter Containers */
+.filter-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.search-filter, .status-filter {
+    flex: 1;
+    margin: 0 10px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-select, .form-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Table Wrapper */
+.table-wrapper {
+    overflow-x: auto; /* Keep horizontal scrolling */
+    overflow-y: hidden; /* Disable vertical scrollbar */
+    margin-top: 20px;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+th, td {
+    padding: 12px; /* Consistent padding */
+    text-align: left;
+    border-bottom: 1px solid #ddd; /* Consistent border */
+}
+
+th {
+    background-color: #495057; /* Header background color */
+    font-weight: bold;
+}
+
+td {
+    min-height: 50px; /* Ensures minimum height for consistency */
+    line-height: 1.5; /* Adjust as needed */
+}
+
+/* Additional Styles */
+.status-cell {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.status-icon {
+    margin-right: 5px;
+}
+
+.order-status-select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.eta-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.eta-daterange {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 200px;
+}
+
+.update-column {
+    min-width: 200px;
+}
+
+.eta-input {
+    display: none;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Styles for Image Display */
+.image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.product-image {
+    width: 50px; /* Thumbnail size */
+    height: 50px; /* Thumbnail size */
+    cursor: pointer;
+}
+
+.full-image {
+    display: none;
+    position: absolute;
+    top: 60px; /* Adjust based on thumbnail height */
+    left: 0;
+    z-index: 10;
+    width: 300px; /* Full image size */
+    height: auto;
+    border: 1px solid #ccc;
+    background-color: white;
+}
+
+/* Optional: Disable vertical scrollbar for the entire body */
+body {
+    overflow-y: hidden; /* Disable vertical scrollbar */
+}

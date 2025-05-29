@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/regform.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_products.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <style>
+        .filter-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-style: none;
+        }
+    
+        .search-filter, .status-filter {
+            flex: 1;
+            margin: 0 10px;
+        }
+    
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    
+        .form-select, .form-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    
+        .table-wrapper {
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 700px;
+            margin-top: 20px;
+            border-style: none;
+        }
+    
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-style: none;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #FFF3E3;
+            color: #856404;
+            font-weight: bold;          
+        }     
+
+        td {
+            min-height: 50px;
+            line-height: 4;
+        }     
+    
+        .status-cell {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    
+        .status-icon {
+            margin-right: 5px;
+        }
+    
+        .order-status-select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+    
+        .order-status-select option:disabled {
+            color: #999;
+            background-color: #f0f0f0;
+        }
+    
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    
+        .eta-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    
+        .eta-daterange {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+    
+        .update-column {
+            min-width: 200px;
+        }
+    
+        .eta-input {
+            display: none;
+        }
+    
+        .hidden {
+            display: none;
+        }
+    
+        body {
+            overflow-y: hidden;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                <span class="logoname">Chairable</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('orders') }}">Orders</a></li>
+                <li><a href="{{ url_for('manage_products') }}">Products</a></li>
+                <li><a href="{{ url_for('archived_products') }}">Archived Products</a></li>
+            </ul>
+            <div class="icon-container">
+                <div class="icon-container">                
+                    <div class="user-profile">
+                        <a href="#" aria-label="User Profile"><i class="fas fa-user"></i></a>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('logout') }}" aria-label="Log Out">Log Out</a>
+                        </div>
+                    </div>                   
+                    <a href="#" id="notification-icon" aria-label="Notifications">
+                        <i class="fas fa-bell"></i>
+                    </a>   
+                    <a href="#" id="message-icon" aria-label="Messages">
+                        <i class="fas fa-comments"></i>
+                    </a>    
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="product-table-container">
+            <section id="orders">
+                <div class="filter-container">
+                    <div class="status-filter">
+                        <label for="statusFilter" class="form-label">Filter by Status</label>
+                        <select id="statusFilter" class="form-select">
+                            <option value="">All Statuses</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="APPROVED">To Ship</option>
+                            <option value="SHIPPED">Shipped</option>
+                            <option value="DELIVERED">Delivered</option>
+                            <option value="CANCELLED">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="search-filter">
+                        <label for="searchInput" class="form-label">Search Orders</label>
+                        <input type="text" id="searchInput" class="form-input" placeholder="Search by order ID or buyer name...">
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Buyer Name</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                                <th>Update</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td>{{ order.id }}</td>
+                                <td>{{ order.buyer_name }}</td>
+                                <td>{{ order.name }}</td>
+                                <td>{{ order.quantity }}</td>
+                                <td>₱{{ "%.2f"|format(order.price) }}</td>
+                                <td>₱{{ "%.2f"|format(order.total) }}</td>
+                                <td class="update-column">
+                                    <div class="eta-input">
+                                        <label for="eta-{{ order.id }}" class="sr-only">Set ETA</label>
+                                        <input type="text" 
+                                               id="eta-{{ order.id }}" 
+                                               class="eta-daterange" 
+                                               data-order-id="{{ order.id }}"
+                                               placeholder="Set delivery ETA"
+                                               readonly>
+                                    </div>
+                                    <span class="status-message">
+                                        {% if order.status == 'PENDING' %}
+                                            Awaiting seller approval
+                                        {% elif order.status == 'APPROVED' %}
+                                            Order to ship
+                                        {% elif order.status == 'SHIPPED' %}
+                                            Shipped on {{ order.shipped_date.strftime('%m/%d/%y') if order.shipped_date else 'N/A' }}
+                                            <br>
+                                            Expected delivery: {{ order.expected_delivery_start.strftime('%m/%d/%y') }} - {{ order.expected_delivery_end.strftime('%m/%d/%y') }}
+                                        {% elif order.status == 'IN_TRANSIT' %}
+                                            In Transit since {{ order.in_transit_date.strftime('%m/%d/%y') if order.in_transit_date else 'N/A' }}
+                                        {% elif order.status == 'DELIVERED' %}
+                                            Delivered on {{ order.delivered_date.strftime('%m/%d/%y') if order.delivered_date else 'N/A' }}
+                                        {% elif order.status == 'CANCELLED' %}
+                                            Order cancelled
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <select id="status-select-{{ order.id }}" 
+                                            class="order-status-select" 
+                                            data-order-id="{{ order.id }}" 
+                                            aria-label="Update order status">
+                                        {% set valid_statuses = {
+                                            'PENDING': ['PENDING', 'APPROVED', 'CANCELLED'],
+                                            'APPROVED': ['APPROVED', 'SHIPPED', 'CANCELLED'],
+                                            'SHIPPED': ['SHIPPED', 'IN_TRANSIT'],
+                                            'IN_TRANSIT': ['IN_TRANSIT'],
+                                            'DELIVERED': ['DELIVERED'],
+                                            'CANCELLED': ['CANCELLED']
+                                        } %}
+                                        {% set current_valid = valid_statuses[order.status] %}
+                                        <option value="PENDING" {% if order.status == 'PENDING' %}selected{% endif %} {% if 'PENDING' not in current_valid %}disabled{% endif %}>Pending</option>
+                                        <option value="APPROVED" {% if order.status == 'APPROVED' %}selected{% endif %} {% if 'APPROVED' not in current_valid %}disabled{% endif %}>To Ship</option>
+                                        <option value="SHIPPED" {% if order.status == 'SHIPPED' %}selected{% endif %} {% if 'SHIPPED' not in current_valid %}disabled{% endif %}>Shipped</option>
+                                        <option value="IN_TRANSIT" {% if order.status == 'IN_TRANSIT' %}selected{% endif %} {% if 'IN_TRANSIT' not in current_valid %}disabled{% endif %}>In Transit</option>
+                                        <option value="DELIVERED" {% if order.status == 'DELIVERED' %}selected{% endif %} {% if 'DELIVERED' not in current_valid %}disabled{% endif %}>Delivered</option>
+                                        <option value="CANCELLED" {% if order.status == 'CANCELLED' %}selected{% endif %} {% if 'CANCELLED' not in current_valid %}disabled{% endif %}>Cancelled</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+    <footer>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="{{ url_for('static', filename='js/orders.js') }}"></script>
+</body>
+</html>

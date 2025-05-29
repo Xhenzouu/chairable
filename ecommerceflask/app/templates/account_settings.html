@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/regform.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/seller_styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_products.css') }}">
+</head>
+<body>
+    <header>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                <span class="logoname">Chairable</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('orders') }}">Orders</a></li>
+                <li><a href="{{ url_for('manage_products') }}">Products</a></li>
+                <li><a href="{{ url_for('account_settings') }}">Account</a></li>
+            </ul>
+            <div class="icon-container">
+                <a href="#" aria-label="User Profile"><i class="fas fa-user"></i></a>
+                <a href="#" aria-label="Search"><i class="fas fa-search"></i></a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="container">
+            <section id="settings">
+                <h2>Account Settings</h2>
+                <form id="settingsForm">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required>
+                    <button type="submit">Update</button>
+                </form>
+            </section>
+        </div>
+    </main>
+    <footer>
+    </footer>        
+</body>
+</html>

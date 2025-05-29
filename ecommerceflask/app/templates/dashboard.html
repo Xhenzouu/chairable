@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/regform.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_products.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notification.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-F3wW6u4Vx4EJzBnS6Wo4jMZYq366löFJ+xjT3sSJIO4Dk8E4I0dT8pzU+YWzBQ" crossorigin="anonymous">
+    <style>
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .date-filter {
+            display: flex; /* Use flexbox for horizontal alignment */
+            align-items: center; /* Align items vertically in the center */
+            gap: 20px; /* Add space between elements */
+        }
+
+        .date-input {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+
+        .filter-button {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1px;
+        }
+
+        .form-label {
+            margin-bottom: 5;
+            font-weight: bold;
+        }
+
+        .form-input {
+            padding: 8px;
+            width: 150px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto; /* Keep horizontal scrolling */
+            overflow-y: auto; /* Enable vertical scrolling */
+            max-height: 780px; /* Set a maximum height for the table */
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px; /* Consistent padding */
+            text-align: center;
+            border: 1px solid #ccc; /* Consistent border */
+        }
+
+        th {
+
+            background-color: #FFF3E3;
+            color: #856404;
+            font-weight: bold;          
+        }     
+
+        td {
+            min-height: 50px; /* Ensures minimum height for consistency */
+            line-height: 4; /* Adjust as needed */
+        }
+
+        /* Add this style to create space for the fixed navbar */
+        main {
+            padding-top: 70px; /* Adjust this value based on the height of your navbar */
+        }
+
+    .plain-close-btn {
+        margin-bottom: 12.5px;
+        margin-left: 250px;
+        background: none; /* Remove any background */
+        border: none; /* Remove any border */
+        color: inherit; /* Inherit the text color from parent */
+        font-size: 24px; /* Set font size for the close icon */
+        cursor: pointer; /* Change cursor to pointer on hover */
+        padding: 0; /* Remove any padding */
+        line-height: 1; /* Adjust line height for vertical alignment */
+    }
+
+.plain-close-btn:hover {
+    color: #c70000; /* Change color on hover if desired */
+    background-color: #FFFFFF;
+    /* You can add more hover effects if needed */
+}
+
+        /* In your CSS file (e.g., notification.css) */
+.notification-popover {
+    color: black; /* Set the text color to black */
+}
+
+.notification-popover-header h5 {
+    color: black; /* Ensure the header text is also black */
+}
+
+.notifications {
+    color: black; /* Set the color for the notification list */
+}
+
+.notification-item p {
+    color: black; /* Set color for the notification message */
+}
+
+.notification-item small {
+    color: gray; /* Optional: Set a different color for the timestamp */
+}
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                <span class="logoname">Chairable</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('orders') }}">Orders</a></li>
+                <li><a href="{{ url_for('manage_products') }}">Products</a></li>
+                <li><a href="{{ url_for('archived_products') }}">Archived Products</a></li>
+            </ul>
+            <div class="icon-container">                
+                <!-- User Profile with Dropdown -->
+                <div class="user-profile">
+                    <a href="#" aria-label="User  Profile"><i class="fas fa-user"></i></a>
+                    <!-- Dropdown Content -->
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('logout') }}" aria-label="Log Out">Log Out</a>
+                    </div>
+                </div>
+                
+                <a href="#" id="notification-icon" aria-label="Notifications">
+                    <i class="fas fa-bell"></i> <!-- Font Awesome bell icon -->
+                </a>
+
+                <a href="#" id="message-icon" aria-label="Messages">
+                    <i class="fas fa-comments"></i> <!-- Font Awesome comments icon -->
+                </a>
+
+            </div>
+        </nav>
+
+        <div id="chat-popover" class="chat-popover" style="visibility: hidden; opacity: 0;">
+            <div id="loading-spinner" style="display: none;">Loading...</div>
+            <div class="user-list-container">
+                <input
+                    type="text"
+                    id="user-search-input"
+                    placeholder="Search users..."
+                    class="user-search-input"
+                />
+                <div id="user-list"></div> <!-- This is where the users will be populated -->
+            </div>
+            <div class="input-container">
+                <div id="chat-messages" class="chat-messages">
+                    <!-- Messages will be loaded here -->
+                    <div id="typing-indicator" style="display: none;">User  is typing...</div>
+                </div>
+                <input type="text" id="message-input" placeholder="Type your message...">
+                <button id="send-message">Send</button>
+            </div>
+        </div>
+        
+<!-- Notification Popover -->
+<div id="notification-popover" class="notification-popover">
+    <div class="notification-popover-header">
+        <h5>Notifications</h5>
+        <button id="delete-button" class="button" style="display:none;">
+            <i class="fas fa-trash-alt"></i>
+        </button>
+    </div>
+    <ul class="notifications">
+        {% for notification in notifications %}
+        <li>
+            <div class="notification-item">
+                <p>{{ notification[1] }} 
+                <small>
+                    {% if notification[3] %}  <!-- Access created_at as notification[3] -->
+                        ({{ notification[3].strftime('%Y-%m-%d %H:%M:%S') }})
+                    {% else %}
+                        (Date not available)
+                    {% endif %}
+                </small></p>
+                <label>
+                    <input type="checkbox" class="notification-checkbox" data-id="{{ notification[0] }}">
+                    <span class="visually-hidden">Notification {{ notification[1] }}</span>
+                </label>
+            </div>
+        </li>
+    {% else %}
+        <li>No notifications.</li>
+    {% endfor %}
+    </ul>
+</div>
+</header>
+    <main>
+        <div class="filter-container">
+            <div class="date-filter">
+                <label for="startDate" class="form-label">Start Date</label>
+                <input type="date" id="startDate" class="form-input" title="Select the start date">
+                
+                <label for="endDate" class="form-label">End Date</label>
+                <input type="date" id="endDate" class="form-input" title="Select the end date">
+                
+                <button type="button" class="filter-button" id="filterButton">Filter</button>
+                <button type="button" class="filter-button" id="exportReportButton">Export Report</button>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Buyer Name</th>
+                        <th>Total Amount</th>
+                        <th>Admin Commission</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if sales_data %}
+                        {% for sale in sales_data %}
+                        <tr>
+                            <td>{{ sale[0] }}</td>  <!-- Order ID -->
+                            <td>
+                                {% if sale[1] %}  <!-- Use the alias index for order_created_at -->
+                                    {{ sale[1].strftime('%Y-%m-%d %I:%M %p') }}  <!-- Created At -->
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                            <td>{{ sale[2] }}</td>  <!-- Buyer Name -->
+                            <td>&#8369;{{ "%.2f"|format(sale[3]) }}</td>  <!-- Total Amount -->
+                            <td>&#8369;{{ "%.2f"|format(sale[4]) }}</td>  <!-- Admin Commission -->
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5">No sales data found for your account.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <footer>
+    </footer>
+    <script>
+        function showChatPopover() {
+            const chatPopover = document.getElementById('chat-popover');
+            chatPopover.style.visibility = 'visible'; // Make the popover visible
+            chatPopover.style.opacity = '1'; // Make the popover fully opaque
+        
+            // Load users when the chat popover is shown
+            fetchUsers(); // Call fetchUsers to populate the user list
+        }
+        
+        // Function to hide the chat popover
+        function hideChatPopover() {
+            const chatPopover = document.getElementById('chat-popover');
+            chatPopover.style.visibility = 'hidden';
+            chatPopover.style.opacity = '0';
+        }
+        
+        // Show the chat popover when the message icon is clicked
+        document.getElementById('message-icon').addEventListener('click', function() {
+            showChatPopover(); // Show the chat popover regardless of user selection
+        });
+        
+        
+        // Hide chat popover when clicking outside of it
+        document.addEventListener('click', function(event) {
+            const chatPopover = document.getElementById('chat-popover');
+            const messageIcon = document.getElementById('message-icon');
+        
+            // Check if the click was outside the chat popover and the message icon
+            if (!chatPopover.contains(event.target) && !messageIcon.contains(event.target)) {
+                hideChatPopover(); // Call function to hide the popover
+            }
+        });
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const exportButton = document.getElementById('exportReportButton');
+                const startDateInput = document.getElementById('startDate');
+                const endDateInput = document.getElementById('endDate');
+            
+                if (exportButton) {
+                    exportButton.addEventListener('click', function () {
+                        const startDate = startDateInput.value;
+                        const endDate = endDateInput.value;
+            
+                        if (!startDate || !endDate) {
+                            alert('Please select both start and end dates to export the report.');
+                            return;
+                        }
+            
+                        const exportUrl = `/dashboard/export_report?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`;
+                        console.log('Navigating to:', exportUrl); // Debugging log
+                        window.location.href = exportUrl;
+                    });
+                }
+            });
+    </script>
+    <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>  
+    
+</body>
+</html>

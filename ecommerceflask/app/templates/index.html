@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chairable - E-Commerce Landing Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/hero.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/showcaseproduct.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/slideshow.css') }}">  
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/collage.css') }}">   
+</head>
+<body>
+    <header>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                <span class="logoname">Chairable</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index" class="back-to-home">Home</a></li>
+                <li><a href="{{ url_for('shop') }}">Shop</a>
+                <li><a href="About">About</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+            <div class="icon-container">
+                <!-- User Profile with dropdown -->
+                <div class="user-profile">
+                    <a href="#" aria-label="User Profile"><i class="fas fa-user"></i></a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('logout') }}" aria-label="Log Out">Log Out</a>
+                    </div>
+                </div>
+                <a href="#" aria-label="Search"><i class="fas fa-search"></i></a>
+                <a href="#" aria-label="Favorites"><i class="fas fa-heart"></i></a>
+                <a href="{{ url_for('cart') }}" aria-label="Shopping Cart"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </nav>
+    </header>    
+    <main>
+        <div class="hero">
+            <div class="hero-content">
+                <h1>Discover Nature & Furnitures</h1>
+                <p>Explore our exclusive collection of home and garden products.</p>
+                <a href="#shop" class="btn">Buy Now</a>
+            </div>
+        </div>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/label.css') }}">   
+        <section class="label-section">
+            <h2>Browse The Range</h2>
+            <p>Find inspiration for every corner of your home and garden. From cozy interiors to lush outdoor spaces, explore what makes your home truly yours.</p>
+        </section>
+        <section class="category-section">
+            <div class="category">
+                <img src="{{ url_for('static', filename='images/homecomfort.png') }}" alt="Home Comfort" class="category-image">
+                <h2>Home Comfort</h2>
+                <p>Explore a wide range of home comfort products to enhance your living space.</p>
+                <a href="#home-comfort" class="btn btn-category">Browse Now</a>
+            </div>
+            <div class="category">
+                <img src="{{ url_for('static', filename='images/gardenoutdoor.png') }}" alt="Garden Outdoor" class="category-image">
+                <h2>Garden Outdoor</h2>
+                <p>Transform your outdoor space with our exclusive garden products.</p>
+                <a href="#garden-outdoor" class="btn btn-category">Browse Now</a>
+            </div>
+        </section>        
+        <section class="product-showcase">
+            <h2 class="section-title">Our Products</h2>
+            <div class="product-grid">
+                <!-- First Row: Products 1-4 -->
+                <div class="product">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product1.png') }}" alt="Product 1">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>                       
+                         </div>
+                    </div>
+                    <h3>Product 1</h3>
+                    <p class="description">This is a short description of Product 1.</p>
+                    <p>$29.99</p>
+                </div>
+                <div class="product">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product2.png') }}" alt="Product 2">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Product 2</h3>
+                    <p class="description">This is a short description of Product 2.</p>
+                    <p>$8.00</p>
+                </div>
+                <div class="product">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product3.png') }}" alt="Product 3">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Product 3</h3>
+                    <p class="description">This is a short description of Product 3.</p>
+                    <p>$15.00</p>
+                </div>
+                <div class="product">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product4.png') }}" alt="Product 4">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Product 4</h3>
+                    <p class="description">This is a short description of Product 4.</p>
+                    <p>$20.00</p>
+                </div>
+                
+                <!-- Second Row: Products 5-8 (hidden initially) -->
+                <div class="product hidden">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product5.png') }}" alt="Product 5">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Product 5</h3>
+                    <p class="description">This is a short description of Product 5.</p>
+                    <p>$25.00</p>
+                </div>
+                <div class="product hidden">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product6.png') }}" alt="Product 6">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Product 6</h3>
+                    <p class="description">This is a short description of Product 6.</p>
+                    <p>$30.00</p>
+                </div>
+                <div class="product hidden">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product7.png') }}" alt="Product 7">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Product 7</h3>
+                    <p class="description">This is a short description of Product 7.</p>
+                    <p>$35.00</p>
+                </div>
+                <div class="product hidden">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/product8.png') }}" alt="Product 8">
+                        <div class="product-overlay">
+                            <a href="#" class="overlay-btn">Add to Cart</a>
+                            <div class="product-actions">
+                                <a href="#" class="action-btn">❤️ Like</a>
+                                <a href="#" class="action-btn">🔗 Share</a>
+                                <a href="#" class="action-btn">⚖️ Compare</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Product 8</h3>
+                    <p class="description">This is a short description of Product 8.</p>
+                    <p>$40.00</p>
+                </div>
+            </div>
+        
+            <div class="button-container">
+                <a href="#" class="show-more" id="showMoreButton">Show More</a>
+            </div>
+        </section>        
+        <div class="section slideshow-section">
+            <div class="slideshow-content">
+                <h2>50+ Must-Have Comforts for Home & Garden Living!</h2>
+                <p>Explore our premium collection designed to make your indoor and outdoor spaces feel like a sanctuary.</p>
+                <button class="btn">Discover More</button> <!-- Updated class -->
+            </div>
+            <div class="slideshow-container">
+                <div class="slide">
+                    <img src="{{ url_for('static', filename='images/slideshow1.png') }}" alt="Slide 1" class="slide-image">
+                </div>
+                <div class="slide">
+                    <img src="{{ url_for('static', filename='images/slideshow2.png') }}" alt="Slide 2" class="slide-image">
+                </div>
+                <div class="slide">
+                    <img src="{{ url_for('static', filename='images/slideshow3.png') }}" alt="Slide 3" class="slide-image">
+                </div>
+                <div class="slide">
+                    <img src="{{ url_for('static', filename='images/slideshow4.png') }}" alt="Slide 4" class="slide-image">
+                </div>
+                <div class="slide">
+                    <img src="{{ url_for('static', filename='images/slideshow5.png') }}" alt="Slide 5" class="slide-image">
+                </div>
+                <div class="slide">
+                    <img src="{{ url_for('static', filename='images/slideshow6.png') }}" alt="Slide 6" class="slide-image">
+                </div>
+                <div class="slide">
+                    <img src="{{ url_for('static', filename='images/slideshow1.png') }}" alt="Slide 7" class="slide-image">
+                </div>
+                <div class="slide">
+                    <img src="{{ url_for('static', filename='images/slideshow2.png') }}" alt="Slide 8" class="slide-image">
+                </div>
+                <div class="slide">
+                    <img src="{{ url_for('static', filename='images/slideshow3.png') }}" alt="Slide 9" class="slide-image">
+                </div>            
+            </div>
+            <div class="radio-buttons">
+                <input type="radio" name="slideshow" id="radio1" checked onclick="showSlides(0)">
+                <label for="radio1" class="visually-hidden">Slide 1</label> <!-- Add label here -->
+                
+                <input type="radio" name="slideshow" id="radio2" onclick="showSlides(1)">
+                <label for="radio2" class="visually-hidden">Slide 2</label> <!-- Add label here -->
+                
+                <input type="radio" name="slideshow" id="radio3" onclick="showSlides(2)">
+                <label for="radio3" class="visually-hidden">Slide 3</label> <!-- Add label here -->
+            </div>
+        </div>
+        <section class="label-section">
+            <p>Share your setup with</p>
+            <h2>#ShareableChairable</h2>
+        </section>
+        <section class="image-collage">
+            <div class="image-wrapper">
+                <img class="small" src="{{ url_for('static', filename='images/product1.png') }}" alt="Image 1">
+                <img class="small" src="{{ url_for('static', filename='images/product2.png') }}" alt="Image 2">
+                <img class="small" src="{{ url_for('static', filename='images/product3.png') }}" alt="Image 3">
+                <img class="small" src="{{ url_for('static', filename='images/product4.png') }}" alt="Image 4">
+                <img class="small" src="{{ url_for('static', filename='images/product5.png') }}" alt="Image 5">
+                <img class="small" src="{{ url_for('static', filename='images/product6.png') }}" alt="Image 6">
+                <img class="small" src="{{ url_for('static', filename='images/product7.png') }}" alt="Image 7">
+                <img class="small" src="{{ url_for('static', filename='images/product8.png') }}" alt="Image 8">
+                <img class="small" src="{{ url_for('static', filename='images/slideshow1.png') }}" alt="Image 9">
+                <img class="small" src="{{ url_for('static', filename='images/slideshow2.png') }}" alt="Image 10">
+                <img class="small" src="{{ url_for('static', filename='images/slideshow3.png') }}" alt="Image 11">
+                <img class="small" src="{{ url_for('static', filename='images/slideshow4.png') }}" alt="Image 12">
+                <img class="small" src="{{ url_for('static', filename='images/slideshow5.png') }}" alt="Image 13">
+                <img class="small" src="{{ url_for('static', filename='images/slideshow6.png') }}" alt="Image 14">
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="footer-logo-img">
+                <span class="footer-logoname">Chairable</span>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-media">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Help</h3>
+                <ul>
+                    <li><a href="#paymentmethods">Payment Methods</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#shipping">Shipping Information</a></li>
+                    <li><a href="#returns">Returns & Exchanges</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to our newsletter for the latest updates and offers:</p>
+                <form action="#" method="post" class="newsletter-form">
+                    <input type="email" placeholder="Your Email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <p>Learn more about our company, values, and mission.</p>
+                <a href="#about" class="btn read-more">Read More</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Chairable. All rights reserved.</p>
+        </div>
+    </footer>        
+    <!-- Include your external JavaScript file -->
+    <script src="{{ url_for('static', filename='js/showmore.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/slideshow.js') }}"></script>
+</body>
+</html>

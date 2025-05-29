@@ -1,0 +1,58 @@
+.hero {
+    background-image: url('/static/images/hero.png');
+    background-size: cover; /* Cover the entire section */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    height: 900px; /* Set the height of the hero section */
+    display: flex; /* Use flexbox for alignment */
+    justify-content: flex-end; /* Align content to the right */
+    align-items: center; /* Center content vertically */
+    color: white; /* Text color */
+    margin: 0; /* Remove any margin to keep it flush against the navbar */
+    padding: 0; /* Ensure no padding is added */
+    position: relative; /* Keep it in flow with the document */
+    overflow: hidden; /* Ensure no overflow from the hero section */
+}
+
+.hero-content {
+    max-width: 600px; /* Maximum width for the content */
+    padding: 20px; /* Padding around the content */
+    z-index: 1; /* Ensure content appears above the background */
+    position: relative; /* Allow stacking with the background */
+    text-align: left; /* Align text to the left */
+    margin-right: 20px; /* Add margin to the right to prevent sticking to the edge */
+    background-color: #FFF3E3; /* Button background color */
+    border-radius: 20px; /* Rounded corners */
+    color: #B88E2F;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add a border shadow */
+}
+
+.hero-content h1 {
+    font-size: 36px; /* Font size for the heading */
+    margin-bottom: 10px; /* Space below the heading */
+    font-weight: bold;
+    color: 0xB88E2F; /* Text color */
+}
+
+.hero-content p {
+    font-size: 18px; /* Font size for the paragraph */
+    margin-bottom: 20px; /* Space below the paragraph */
+}
+
+.btn {
+    display: inline-block; /* Button styling */
+    background-color: #B88E2F; /* Button background color */
+    color: white; /* Button text color */
+    padding: 10px 20px; /* Padding inside the button */
+    text-decoration: none; /* Remove underline */
+    border-radius: 20px; /* Rounded corners for the button */
+    transition: background-color 0.3s, color 0.3s; /* Transition effect for color */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Add a border shadow */
+}
+
+.btn:hover {
+    background-color: #FFF3E3; /* Change color on hover */
+    color: black; /* Change text color to black on hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Increase shadow on hover */
+    font-weight: bold;
+}

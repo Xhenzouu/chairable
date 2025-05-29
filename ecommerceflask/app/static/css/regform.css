@@ -1,0 +1,211 @@
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 100px auto;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    margin: 78px auto;
+}
+
+h1 {
+    text-align: center;
+    color: #444;
+    font-size: 2em;
+    margin-bottom: 15px;
+}
+
+.message {
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #dff0d8;
+    color: #3c763d;
+    border: 1px solid #d6e9c6;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    margin-top: 10px;
+    display: flex; 
+    flex-direction: column;
+    gap: 12px;
+}
+
+label {
+    display: inline-block;
+    margin-bottom: 0;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus {
+    border-color: #66afe9;
+    outline: none;
+    box-shadow: 0 0 5px rgba(102, 175, 233, 0.5);
+}
+
+input[type="radio"] {
+    margin-right: 5px;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    margin-right: 5px;
+    vertical-align: middle;
+    float: left;
+    margin-left: 0;
+}
+
+
+
+input[type="submit"],
+button {
+    background-color: #E8B86D;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+input[type="submit"]:hover,
+button:hover {
+    background-color: #be9859;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+th {
+    text-align: center; /* Centers the text horizontally in the cell */
+    height: 100px; /* Adjust height as needed */
+    padding: 10px; /* Padding for better spacing */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+        width: 90%;
+    }
+
+    .registration-container {
+        width: 90%;
+    }
+}
+
+.delete-form {
+    display: inline;
+}
+
+.delete-form input[type="submit"] {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.delete-form input[type="submit"]:hover {
+    background-color: #c82333;
+}
+
+.button {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 83%;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.registration-container {
+    max-width: 400px;
+    margin: 78px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+}
+
+.center-message {
+    text-align: center;
+    margin: 15px auto;
+}
+
+.alert {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.action-form {
+    display: inline; /* Keep forms inline */
+}
+
+.action-button {
+    margin: 0 5px; /* Add some space between buttons */
+    padding: 5px 10px; /* Add padding for better appearance */
+    cursor: pointer; /* Change cursor to pointer */
+    /* You can add more styling here */
+}
+
+
+
+

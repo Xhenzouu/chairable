@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Current Orders</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/popover.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notification.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .icon-button {
+            transition: transform 0.3s ease, color 0.3s ease;
+            background: none;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+        }
+        .icon-button:hover {
+            transform: scale(1.2);
+        }
+        .icon-button:hover i {
+            transition: color 0.3s ease;
+        }
+        .icon-button:hover i.fa-times-circle {
+            color: #dc3545;
+        }
+        .icon-button:hover i.fa-star {
+            color: #ffc107;
+        }
+        .icon-button:hover i.fa-trash {
+            color: #dc3545;
+        }
+        .text-left { text-align: left; }
+        .text-center { text-align: center; }
+        td, th { text-align: center; background-color: #FFFFFF; }
+        th { background-color: #FFF3E0; color: #333; position: sticky; top: 0; z-index: 1; }
+        .action-column { background-color: #FFFFFF; }
+        .action-column button { background-color: #FFFFFF; border: none; cursor: pointer; }
+        .table-responsive {
+            max-height: 800px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+            border-radius: 5px;
+            height: 650px;
+        }
+        .update-column {
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .update-column.pending { background-color: #fff3cd; color: #856404; }
+        .update-column.approved { background-color: #d4edda; color: #155724; }
+        .update-column.shipped { background-color: #e8f5fe; color: #0c5460; }
+        .update-column.delivered { background-color: #B5EAD7; color: #008000; }
+        .update-column.cancelled { background-color: #f8d7da; color: #721c24; }
+        .update-column.in-transit { background-color: #e2e3ff; color: #5c5c8a; }
+        .update-column i { margin-right: 5px; }
+        .plain-close-btn {
+            margin-left: 200px;
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+        .plain-close-btn:hover { color: #c70000; background-color: #FFFFFF; }
+        .notification-popover, .notification-popover-header h5, .notifications, .notification-item p { color: black; }
+        .notification-item small { color: gray; }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.5s;
+        }
+        .overlay.visible { visibility: visible; opacity: 1; }
+        .overlay-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            text-align: center;
+        }
+        .message-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .message-container label {
+            font-size: 16px;
+            color: #333;
+            margin: 10px 0;
+        }
+        .message-container select, .message-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .message-container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .message-container button:hover { background-color: #45a049; }
+        .message-container .close {
+            font-size: 20px;
+            color: #333;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        .star-rating {
+            display: flex;
+            cursor: pointer;
+            justify-content: center;
+        }
+        .star {
+            font-size: 30px;
+            color: #ccc;
+            transition: color 0.2s;
+        }
+        .star.selected { color: gold; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                <span class="logoname">Chairable</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index" class="back-to-home">Home</a></li>
+                <li><a href="shop">Shop</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="contact">Contact</a></li>
+            </ul>
+            <div class="icon-container">
+                <a href="#" id="message-icon" aria-label="Messages"><i class="fas fa-comments"></i></a>
+                <div class="user-profile">
+                    <a href="#" aria-label="User Profile"><i class="fas fa-user"></i></a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('logout') }}" aria-label="Log Out">Log Out</a>
+                    </div>
+                </div>
+                <a href="{{ url_for('current_orders') }}" aria-label="Current Orders"><i class="fas fa-box"></i></a>
+                <a href="#" id="notification-icon" aria-label="Notifications"><i class="fas fa-bell"></i></a>
+                <a href="#" id="cart-icon" aria-label="Shopping Cart"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </nav>
+        <div id="chat-popover" class="chat-popover">
+            <div id="loading-spinner" style="display: none;">Loading...</div>
+            <div class="user-list-container">
+                <input type="text" id="user-search-input" placeholder="Search users..." class="user-search-input" />
+                <div id="user-list"></div>
+            </div>
+            <div class="input-container">
+                <div id="chat-messages" class="chat-messages">
+                    <div id="typing-indicator" style="display: none;">User is typing...</div>
+                </div>
+                <input type="text" id="message-input" placeholder="Type your message...">
+                <button id="send-message">Send</button>
+            </div>
+        </div>
+        <div id="notification-popover" class="notification-popover">
+            <div class="notification-popover-header">
+                <h5>Notifications</h5>
+                <button id="delete-button" class="button" style="display:none;">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+            <ul class="notifications">
+                {% for notification in notifications %}
+                <li>
+                    <div class="notification-item">
+                        <p>{{ notification[1] }} 
+                        <small>
+                            {% if notification[2] %}
+                                ({{ notification[2].strftime('%Y-%m-%d %H:%M:%S') }})
+                            {% else %}
+                                (Date not available)
+                            {% endif %}
+                        </small></p>
+                        <label>
+                            <input type="checkbox" class="notification-checkbox" data-id="{{ notification[0] }}">
+                            <span class="visually-hidden">Notification {{ notification[1] }}</span>
+                        </label>
+                    </div>
+                </li>
+                {% else %}
+                <li>No notifications.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </header>
+    <div class="container mt-4">
+        <div class="current-orders">
+            <div class="card p-4">
+                <div class="row">
+                    <div class="col-md-12">                       
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Order ID</th>
+                                        <th class="text-center">Image</th>
+                                        <th class="text-center">Name</th>
+                                        <th class="text-center">Quantity</th>
+                                        <th class="text-center">Price</th>
+                                        <th class="text-center">Subtotal</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-center">Update</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                    <tbody>
+                                        {% if orders %}
+                                            {% for order in orders %}
+                                                <tr>
+                                                    <td class="text-left">{{ order.id }}</td>
+                                                    <td><img src="{{ order.image_url|default('static/images/placeholder.jpg') }}" alt="{{ order.name|default('Unknown Product') }}" class="product-img"></td>
+                                                    <td class="product-name">{{ order.name|default('Unknown Product') }}</td>
+                                                    <td>{{ order.quantity|default(0) }}</td>
+                                                    <td>₱{{ "%.2f"|format(order.price|default(0.00)) }}</td>
+                                                    <td>₱{{ "%.2f"|format(order.item_total|default(0.00)) }}</td>
+                                                    <td class="text-left status-{{ order.status.lower() }}">
+                                                        {{ order.status }} <i class="fas fa-{{ order.icon|default('question') }}"></i>
+                                                    </td>
+                                                    <td class="update-column {{ order.status.lower() }} {% if order.status == 'IN_TRANSIT' %}in-transit{% endif %}">
+                                                        {% if order.status == 'IN_TRANSIT' %}
+                                                            <i class="fas fa-motorcycle"></i> Order is out for delivery.<br>
+                                                            Please prepare: ₱{{ "%.2f"|format(order.total|default(0.00)) }}.
+                                                        {% elif order.status == 'SHIPPED' %}
+                                                            <i class="fas fa-truck"></i> Shipped on {{ order.shipped_date|default('N/A') }}<br>
+                                                            Expected delivery: {{ order.expected_delivery_start|default('Not set') }} - {{ order.expected_delivery_end|default('Not set') }}
+                                                        {% elif order.status == 'APPROVED' %}
+                                                            <i class="fas fa-check"></i> Your order has been approved. <br>Please wait for Seller to ship out.
+                                                        {% elif order.status == 'DELIVERED' %}
+                                                            <i class="fas fa-box"></i> Delivered on {{ order.delivered_date.strftime('%m/%d/%y') if order.delivered_date else 'N/A' }}
+                                                        {% elif order.status == 'PENDING' %}
+                                                            <i class="fas fa-clock"></i> Awaiting seller approval
+                                                        {% elif order.status == 'CANCELLED' %}
+                                                            <i class="fas fa-exclamation-circle"></i> Order has been cancelled
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-center action-column">
+                                                        {% if order.status in ['PENDING', 'APPROVED'] %}
+                                                            <button class="btn icon-button" title="Cancel Order" 
+                                                                    onclick="cancelOrder('{{ order.id }}')"
+                                                                    aria-label="Cancel Order {{ order.id }}">
+                                                                <i class="fas fa-times-circle"></i>
+                                                            </button>
+                                                        {% elif order.status == 'DELIVERED' and not order.confirmed_receipt %}
+                                                            <button class="btn icon-button" title="Mark as Received" 
+                                                                    onclick="markAsDelivered('{{ order.id }}')"
+                                                                    aria-label="Mark Order {{ order.id }} as Received">
+                                                                <i class="fas fa-check"></i>
+                                                            </button>
+                                                        {% elif order.status == 'DELIVERED' and order.confirmed_receipt and not order.all_rated %}
+                                                            <button class="btn icon-button" title="Rate Products" 
+                                                                    onclick="rateProduct('{{ order.id }}')"
+                                                                    aria-label="Rate Products for Order {{ order.id }}">
+                                                                <i class="fas fa-star"></i>
+                                                            </button>
+                                                        {% elif order.status == 'DELIVERED' and order.all_rated %}
+                                                            <button class="btn icon-button" title="Remove Order" 
+                                                                    onclick="removeOrder('{{ order.id }}')"
+                                                                    aria-label="Remove Order {{ order.id }}">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        {% elif order.status == 'CANCELLED' %}
+                                                            <button class="btn icon-button" title="Remove Order" 
+                                                                    onclick="removeOrder('{{ order.id }}')"
+                                                                    aria-label="Remove Order {{ order.id }}">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        {% elif order.status == 'IN_TRANSIT' %}
+                                                            <button class="btn icon-button" title="Mark as Received" 
+                                                                    onclick="markAsDelivered('{{ order.id }}')"
+                                                                    aria-label="Mark Order {{ order.id }} as Received">
+                                                                <i class="fas fa-check"></i>
+                                                            </button>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="9" class="text-center">No orders found.</td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="footer-logo-img">
+                <span class="footer-logoname">Chairable</span>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-media">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Help</h3>
+                <ul>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#shipping">Shipping Information</a></li>
+                    <li><a href="#returns">Returns & Exchanges</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to our newsletter for the latest updates and offers:</p>
+                <form action="#" method="post" class="newsletter-form">
+                    <input type="email" placeholder="Your Email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <p>Learn more about our company, values, and mission.</p>
+                <a href="#about" class="btn">Read More</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Chairable. All rights reserved.</p>
+        </div>
+    </footer>
+    <div id="ratingOverlay" class="overlay">
+        <div class="overlay-content">
+            <div class="message-container" id="ratingContainer">
+                <h2>Rate Products</h2>
+                <div id="productSelection" style="max-height: 200px; overflow-y: auto;">
+                    <p>Select one or more products to rate:</p>
+                    <div id="productList"></div>
+                </div>
+                <div id="ratingForm" style="display: none; max-height: 300px; overflow-y: auto;">
+                    <div id="ratingFields"></div>
+                </div>
+                <button id="proceedButton" onclick="proceedToRating()">Proceed</button>
+                <button id="submitButton" onclick="submitRatings()" style="display: none;">Submit Ratings</button>
+                <span class="close" onclick="closeRatingOverlay()">× Close</span>
+            </div>
+        </div>
+    </div>
+<script>
+function showChatPopover() {
+    const chatPopover = document.getElementById('chat-popover');
+    chatPopover.style.visibility = 'visible';
+    chatPopover.style.opacity = '1';
+    fetchUsers();
+}
+
+function hideChatPopover() {
+    const chatPopover = document.getElementById('chat-popover');
+    chatPopover.style.visibility = 'hidden';
+    chatPopover.style.opacity = '0';
+}
+
+document.getElementById('message-icon').addEventListener('click', function() {
+    showChatPopover();
+});
+
+document.addEventListener('click', function(event) {
+    const chatPopover = document.getElementById('chat-popover');
+    const messageIcon = document.getElementById('message-icon');
+    if (!chatPopover.contains(event.target) && !messageIcon.contains(event.target)) {
+        hideChatPopover();
+    }
+});
+
+function markAsDelivered(orderId) {
+    if (confirm('Have you received this order?')) {
+        fetch(`/confirm-receipt/${orderId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Order marked as received successfully');
+                updateOrderStatus(orderId, 'DELIVERED', true);
+            } else {
+                alert('Failed to update order status: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating the order status');
+        });
+    }
+}
+
+function removeOrder(orderId) {
+    if (confirm('Are you sure you want to remove this order from your history?')) {
+        fetch(`/remove-order/${orderId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Order removed successfully');
+                location.reload();
+            } else {
+                alert('Failed to remove order: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while removing the order');
+        });
+    }
+}
+
+function cancelOrder(orderId) {
+    if (confirm('Are you sure you want to cancel this order?')) {
+        fetch(`/cancel-order/${orderId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Order cancelled successfully');
+                updateOrderStatus(orderId, 'CANCELLED', false);
+            } else {
+                alert('Failed to cancel order: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while cancelling the order');
+        });
+    }
+}
+
+let selectedRating = 0;
+
+document.querySelectorAll('.star').forEach(star => {
+    star.addEventListener('click', function() {
+        selectedRating = this.getAttribute('data-value');
+        updateStarDisplay(selectedRating);
+    });
+});
+
+function updateStarDisplay(rating) {
+    const stars = document.querySelectorAll('.star');
+    stars.forEach(star => {
+        star.classList.remove('selected');
+        if (star.getAttribute('data-value') <= rating) {
+            star.classList.add('selected');
+        }
+    });
+}
+
+// Multi-product rating functions
+let selectedProducts = [];
+let ratings = {};
+let reviews = {};
+
+function rateProduct(orderId) {
+    const ratingOverlay = document.getElementById('ratingOverlay');
+    ratingOverlay.classList.add('visible');
+    selectedProducts = [];
+    ratings = {};
+    reviews = {};
+
+    // Reset UI
+    document.getElementById('productSelection').style.display = 'block';
+    document.getElementById('ratingForm').style.display = 'none';
+    document.getElementById('proceedButton').style.display = 'block';
+    document.getElementById('submitButton').style.display = 'none';
+
+    // Fetch order items to populate product selection
+    fetch(`/api/order-items/${orderId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const productList = document.getElementById('productList');
+        productList.innerHTML = '';
+        if (!data.items || data.items.length === 0) {
+            productList.innerHTML = '<p>No products available to rate.</p>';
+            return;
+        }
+        const rateableItems = data.items.filter(item => !item.has_rated);
+        if (rateableItems.length === 0) {
+            productList.innerHTML = '<p>All products in this order have been rated.</p>';
+            document.getElementById('proceedButton').style.display = 'none';
+            return;
+        }
+        rateableItems.forEach(item => {
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <label style="display: flex; align-items: center; margin-bottom: 8px;">
+                    <input type="checkbox" value="${item.product_id}" onchange="updateSelectedProducts(this)">
+                    <span style="margin-left: 8px;">${item.name} (Qty: ${item.quantity})</span>
+                </label>`;
+            productList.appendChild(div);
+        });
+        window.currentOrderId = orderId;
+    })
+    .catch(error => {
+        console.error('Error fetching order items:', error);
+        alert('Failed to load products for rating.');
+        closeRatingOverlay();
+    });
+
+    ratingOverlay.addEventListener('click', function(event) {
+        if (event.target === ratingOverlay) {
+            closeRatingOverlay();
+        }
+    });
+}
+
+function updateSelectedProducts(checkbox) {
+    const productId = parseInt(checkbox.value);
+    if (checkbox.checked) {
+        selectedProducts.push(productId);
+    } else {
+        selectedProducts = selectedProducts.filter(id => id !== productId);
+    }
+}
+
+function proceedToRating() {
+    if (selectedProducts.length === 0) {
+        alert('Please select at least one product to rate.');
+        return;
+    }
+
+    // Initialize ratings and reviews for selected products
+    selectedProducts.forEach(productId => {
+        ratings[productId] = 0;
+        reviews[productId] = '';
+    });
+
+    // Hide product selection and show rating form
+    document.getElementById('productSelection').style.display = 'none';
+    document.getElementById('ratingForm').style.display = 'block';
+    document.getElementById('proceedButton').style.display = 'none';
+    document.getElementById('submitButton').style.display = 'block';
+
+    // Populate rating fields
+    const ratingFields = document.getElementById('ratingFields');
+    ratingFields.innerHTML = '';
+    fetch(`/api/order-items/${window.currentOrderId}`)
+    .then(response => response.json())
+    .then(data => {
+        const selectedItems = data.items.filter(item => selectedProducts.includes(item.product_id));
+        selectedItems.forEach(item => {
+            const productId = item.product_id;
+            const div = document.createElement('div');
+            div.style.marginBottom = '20px';
+            div.innerHTML = `
+                <h4>${item.name}</h4>
+                <div class="star-rating" data-product-id="${productId}">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+                <textarea id="review-${productId}" placeholder="Write your review (optional)" rows="3" style="width: 100%; margin-top: 10px;"></textarea>
+                <hr>`;
+            ratingFields.appendChild(div);
+
+            // Add event listeners for stars
+            div.querySelectorAll('.star').forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = parseInt(this.getAttribute('data-value'));
+                    ratings[productId] = rating;
+                    updateStarDisplay(productId, rating);
+                });
+            });
+
+            // Add event listener for review textarea
+            div.querySelector(`#review-${productId}`).addEventListener('input', function() {
+                reviews[productId] = this.value;
+            });
+        });
+    });
+}
+
+function updateStarDisplay(productId, rating) {
+    const stars = document.querySelectorAll(`.star-rating[data-product-id="${productId}"] .star`);
+    stars.forEach(star => {
+        star.classList.remove('selected');
+        if (parseInt(star.getAttribute('data-value')) <= rating) {
+            star.classList.add('selected');
+        }
+    });
+}
+
+function submitRatings() {
+    // Validate ratings
+    for (const productId of selectedProducts) {
+        if (ratings[productId] < 1 || ratings[productId] > 5) {
+            alert(`Please provide a rating between 1 and 5 for all products.`);
+            return;
+        }
+    }
+
+    if (!confirm(`Are you sure you want to submit ratings for ${selectedProducts.length} product(s)?`)) {
+        return;
+    }
+
+    // Submit ratings sequentially
+    const submitNextRating = (index) => {
+        if (index >= selectedProducts.length) {
+            alert('Ratings submitted successfully!');
+            closeRatingOverlay();
+            updateOrderButton(window.currentOrderId);
+            return;
+        }
+
+        const productId = selectedProducts[index];
+        const data = {
+            productId: productId,
+            rating: ratings[productId],
+            review: reviews[productId] || '',
+            orderId: window.currentOrderId
+        };
+
+        fetch('/api/rateProduct', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                submitNextRating(index + 1);
+            } else {
+                alert(`Error rating product ${productId}: ${data.message}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(`An error occurred while submitting rating for product ${productId}.`);
+        });
+    };
+
+    submitNextRating(0);
+}
+
+function closeRatingOverlay() {
+    const ratingOverlay = document.getElementById('ratingOverlay');
+    ratingOverlay.classList.remove('visible');
+}
+
+function updateOrderStatus(orderId, newStatus, confirmedReceipt) {
+    const orderRow = Array.from(document.querySelectorAll('tr')).find(row => {
+        return row.cells[0].textContent.trim() === orderId.toString();
+    });
+
+    if (orderRow) {
+        const statusColumn = orderRow.querySelector('.status-column') || orderRow.cells[6];
+        const updateColumn = orderRow.querySelector('.update-column');
+        const actionColumn = orderRow.querySelector('.action-column');
+
+        if (statusColumn) {
+            statusColumn.className = `text-left status-${newStatus.toLowerCase()}`;
+            statusColumn.innerHTML = `${newStatus} <i class="fas fa-${getStatusIcon(newStatus)}"></i>`;
+        }
+
+        if (updateColumn) {
+            updateColumn.className = `update-column ${newStatus.toLowerCase()}`;
+            updateColumn.innerHTML = getUpdateText(newStatus);
+        }
+
+        if (actionColumn) {
+            actionColumn.innerHTML = getActionButton(orderId, newStatus, confirmedReceipt);
+        }
+    }
+}
+
+function updateOrderButton(orderId) {
+    fetch(`/api/order-items/${orderId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const allRated = data.items.every(item => item.has_rated);
+        updateOrderStatus(orderId, 'DELIVERED', true, allRated);
+    });
+}
+
+function getStatusIcon(status) {
+    switch (status) {
+        case 'PENDING': return 'clock';
+        case 'APPROVED': return 'check';
+        case 'SHIPPED': return 'truck';
+        case 'IN_TRANSIT': return 'motorcycle';
+        case 'DELIVERED': return 'box';
+        case 'CANCELLED': return 'times';
+        default: return 'question';
+    }
+}
+
+function getUpdateText(status) {
+    const now = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
+    switch (status) {
+        case 'PENDING': return `<i class="fas fa-clock"></i> Awaiting seller approval`;
+        case 'APPROVED': return `<i class="fas fa-check"></i> Your order has been approved. <br>Please wait for Seller to ship out.`;
+        case 'SHIPPED': return `<i class="fas fa-truck"></i> Shipped on ${now}<br>Expected delivery: Date not set`;
+        case 'IN_TRANSIT': return `<i class="fas fa-motorcycle"></i> Order is out for delivery.<br>Please prepare payment.`;
+        case 'DELIVERED': return `<i class="fas fa-box"></i> Delivered on ${now}`;
+        case 'CANCELLED': return `<i class="fas fa-exclamation-circle"></i> Order has been cancelled`;
+        default: return '';
+    }
+}
+
+function getActionButton(orderId, status, confirmedReceipt, allRated = false) {
+    switch (status) {
+        case 'PENDING':
+        case 'APPROVED':
+            return `
+                <button class="btn icon-button" title="Cancel Order" 
+                        onclick="cancelOrder('${orderId}')"
+                        aria-label="Cancel Order ${orderId}">
+                    <i class="fas fa-times-circle"></i>
+                </button>`;
+        case 'DELIVERED':
+            if (!confirmedReceipt) {
+                return `
+                    <button class="btn icon-button" title="Mark as Received" 
+                            onclick="markAsDelivered('${orderId}')"
+                            aria-label="Mark Order ${orderId} as Received">
+                        <i class="fas fa-check"></i>
+                    </button>`;
+            } else if (!allRated) {
+                return `
+                    <button class="btn icon-button" title="Rate Products" 
+                            onclick="rateProduct('${orderId}')"
+                            aria-label="Rate Products for Order ${orderId}">
+                        <i class="fas fa-star"></i>
+                    </button>`;
+            } else {
+                return `
+                    <button class="btn icon-button" title="Remove Order" 
+                            onclick="removeOrder('${orderId}')"
+                            aria-label="Remove Order ${orderId}">
+                        <i class="fas fa-trash"></i>
+                    </button>`;
+            }
+        case 'CANCELLED':
+            return `
+                <button class="btn icon-button" title="Remove Order" 
+                        onclick="removeOrder('${orderId}')"
+                        aria-label="Remove Order ${orderId}">
+                    <i class="fas fa-trash"></i>
+                </button>`;
+        case 'IN_TRANSIT':
+            return `
+                <button class="btn icon-button" title="Mark as Received" 
+                        onclick="markAsDelivered('${orderId}')"
+                        aria-label="Mark Order ${orderId} as Received">
+                    <i class="fas fa-check"></i>
+                </button>`;
+        default:
+            return '';
+    }
+}
+</script>
+<script src="{{ url_for('static', filename='js/notification.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>        
+</body>
+</html>

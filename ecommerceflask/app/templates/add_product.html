@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/regform.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <style>
+        .form-container {
+            display: flex; /* Enables flexbox layout */
+            justify-content: space-between; /* Distributes space evenly */
+            flex-wrap: wrap; /* Allows wrapping of items */
+        }
+        .form-section {
+            flex: 1; /* Allows sections to grow equally */
+            min-width: 300px; /* Sets a minimum width */
+            margin: 10px; /* Adds spacing between sections */
+        }
+        label {
+            display: block; /* Ensures labels are on their own line */
+            margin-top: 10px; /* Adds spacing above labels */
+        }
+        input, select, textarea {
+            width: 100%; /* Makes input fields take full width */
+            padding: 8px; /* Adds padding inside input fields */
+            margin-top: 5px; /* Adds spacing above input fields */
+        }
+        .image-preview {
+            margin-top: 10px;
+        }
+        .image-preview img {
+            width: 100px; /* Set width for preview images */
+            height: auto;
+            cursor: pointer; /* Show pointer cursor for clickable images */
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-container">
+        {% if message %}
+        <div class="message center-message">{{ message }}</div>
+        {% endif %}       
+        <form action="{{ url_for('add_product') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-section">               
+                <label for="name">Product Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required></textarea>
+
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" required min="0" step="0.01">
+                
+                <label for="discount_percentage">Discount Percentage:</label>
+                <input type="number" id="discount_percentage" name="discount_percentage" min="0" step="0.01">
+
+                <label for="stock">Stock Quantity:</label>
+                <input type="number" id="stock" name="stock" required min="0">
+
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="" disabled selected>Select a category</option>
+                    <option value="Home Comfort">Home Comfort</option>
+                    <option value="Garden Outdoor">Garden Outdoor</option>
+                </select>
+
+                <label for="subcategory">Subcategory:</label>
+                <select id="subcategory" name="subcategory" required>
+                    <option value="" disabled selected>Select a subcategory</option>
+                    <option value="Kitchen Appliances">Kitchen Appliances</option>
+                    <option value="Furniture & Decor">Furniture & Decor</option>
+                    <option value="Gardening Tools">Gardening Tools</option>
+                    <option value="Outdoor Living">Outdoor Living</option>
+                    <option value="Home Improvement Tools">Home Improvement Tools</option>
+                    <option value="Bedding & Bath">Bedding & Bath</option>
+                </select>
+            </div>
+
+            <div class="form-section">
+                <label for="variant">Variant:</label>
+                <input type="text" id="variant" name="variant">
+
+                <label for="image_upload">Upload Image:</label>
+                <input type="file" id="image_upload" name="image_upload" accept="image/*">
+                <div id="image_preview"></div>
+
+                <div class="image-preview" id="main_image_preview">
+                    <span>No image selected</span>
+                </div>
+
+                <label for="image_url">Or Enter Image URL:</label>
+                <input type="text" id="image_url" name="image_url">
+                <div id="image_preview"></div>
+                
+                <div class="image-preview" id="additional_images_preview">
+                    <span>No additional images selected</span>
+                </div>
+
+                <div class="form-section">
+                    <label>Additional Images (Max 3):</label>
+                    
+                    <!-- URL inputs -->
+                    <div class="url-inputs">
+                        <input type="text" name="additional_image_url_0" placeholder="Image URL 1"> <br>
+                        <input type="text" name="additional_image_url_1" placeholder="Image URL 2"> <br>
+                        <input type="text" name="additional_image_url_2" placeholder="Image URL 3">
+                    </div>
+                
+                    <!-- OR -->
+                    <div class="separator">OR</div>
+                
+                    <!-- File uploads -->
+                    <label for="additional_image_files">Additional Images (Max 3):</label>
+                    <input type="file" name="additional_image_files" multiple accept="image/*" id="additional_image_files" title="Select up to 3 additional images">                    
+                    <small>You can select up to 3 images</small>
+                </div>
+
+                <label for="material">Material:</label>
+                <input type="text" id="material" name="material">
+
+                <label for="dimensions">Dimensions:</label>
+                <input type="text" id="dimensions" name="dimensions">
+
+                <label for="weight">Weight:</label>
+                <input type="number" id="weight" name="weight" step="0.01">
+
+                <label for="shipping_weight">Shipping Weight:</label>
+                <input type="number" id="shipping_weight" name="shipping_weight" step="0.01">
+
+                <label for="shipping_dimensions">Shipping Dimensions:</label>
+                <input type="text" id="shipping_dimensions" name="shipping_dimensions">
+
+                <label for="indoor_outdoor">Indoor/Outdoor:</label>
+                <select id="indoor_outdoor" name="indoor_outdoor" required>
+                    <option value="" disabled selected>Select option</option>
+                    <option value="indoor">Indoor</option>
+                    <option value="outdoor">Outdoor</option>
+                    <option value="both">Both</option>
+                </select>
+
+                <label for="color">Color:</label>
+                <input type="text" id="color" name="color">
+
+                <label for="brand">Brand:</label>
+                <input type="text" id="brand" name="brand">
+
+                <label for="power_source">Power Source:</label>
+                <input type="text" id="power_source" name="power_source">
+
+                <label for="warranty">Warranty:</label>
+                <input type="text" id="warranty" name="warranty">
+
+                <label for="tags">Tags (comma-separated):</label>
+                <textarea id="tags" name="tags"></textarea>
+
+                <label for="is_on_sale">Is on Sale?</label>
+                <select id="is_on_sale" name="is_on_sale">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                </select>
+
+                <!-- Remove approval status -->
+                
+                
+            </div>
+
+            <input type="submit" value="Add Product">
+        </form>                        
+    </div>
+
+    <script>
+        function updatePreview() {
+            const imageUrl = document.getElementById('image_url').value;
+            const imageFile = document.getElementById('image_upload').files[0];
+            const previewContainer = document.getElementById('image_preview');
+            updateImagePreview(imageUrl, imageFile, previewContainer);
+        }
+    
+        function updateAdditionalPreview() {
+            const additionalFiles = document.getElementById('additional_images').files;
+            const additionalPreviewContainer = document.getElementById('additional_images_preview');
+            updateMultipleImagePreviews(additionalFiles, additionalPreviewContainer, 3);
+        }
+    
+        function updateImagePreview(url, file, container) {
+            container.innerHTML = ''; // Clear previous preview
+    
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    createImagePreview(e.target.result, container);
+                };
+                reader.readAsDataURL(file);
+            } else if (url) {
+                createImagePreview(url, container);
+            } else {
+                container.innerHTML = '<span>No image selected</span>';
+            }
+        }
+    
+        function updateMultipleImagePreviews(files, container, maxCount) {
+            container.innerHTML = ''; // Clear previous previews
+    
+            for (let i = 0; i < Math.min(files.length, maxCount); i++) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    createImagePreview(e.target.result, container);
+                };
+                reader.readAsDataURL(files[i]);
+            }
+    
+            if (files.length > maxCount) {
+                alert(`You can only upload up to ${maxCount} additional images. Only the first ${maxCount} will be processed.`);
+            }
+        }
+    
+        function createImagePreview(src, container) {
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = 'Image Preview';
+            img.style.width = '100px';
+            img.style.height = 'auto';
+            img.style.margin = '5px';
+            img.onclick = function() {
+                window.open(src);
+            };
+            container.appendChild(img);
+        }
+    
+        // Add event listeners
+        document.getElementById('image_url').addEventListener('input', updatePreview);
+        document.getElementById('image_upload').addEventListener('change', updatePreview);
+        document.getElementById('additional_image_files').addEventListener('change', updateAdditionalPreview);
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/label.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/hero2.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/popover.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/popover.css') }}">
+
+</head>
+<body>
+    <header>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+            <nav class="navbar">
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                    <span class="logoname">Chairable</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="index" class="back-to-home">Home</a></li>
+                    <li><a href="shop">Shop</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="contact">Contact</a></li>
+                </ul>
+                <div class="icon-container">
+                    <a href="profile" aria-label="User Profile"><i class="fas fa-user"></i></a>
+                    <a href="#" aria-label="Search"><i class="fas fa-search"></i></a>
+                    <a href="#" aria-label="Favorites"><i class="fas fa-heart"></i></a>
+                    <a href="{{ url_for('cart') }}" aria-label="Shopping Cart"><i class="fas fa-shopping-cart"></i></a>
+                </div>
+            </nav>
+        </header>
+        <div id="cart-popover" class="cart-popover">
+            <div class="cart-popover-header">
+                <h5>Shopping Cart</h5>
+                <button class="close-btn" id="close-cart-btn">&times;</button>
+            </div>
+            <div class="cart-items">
+            </div>
+            <div class="cart-summary">
+                <div class="subtotal-row">
+                    <p class="text-left">Subtotal:</p> 
+                    <span class="price">PHP 5,000.00</span>
+                </div>                
+                <div class="cart-buttons">
+                    <a href="cart" class="btn cart-btn">Cart</a>
+                    <a href="checkout" class="btn cart-btn">Checkout</a>
+                    <a href="comparison" class="btn cart-btn">Comparison</a>
+                </div>
+            </div>
+        </div>
+        <div id="overlay" class="overlay"></div>
+    <main>
+        <div class="hero">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="hero-logo">
+            <div class="breadcrumb">
+                <h2>Contact</h2>
+                <p>
+                    <a href="index">Home</a> &gt; <span>Contact</span>
+                </p>
+            </div>
+        </div>
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/label.css') }}">   
+            <section class="label-section">
+                <h2>Contact</h2>
+                <h2>Get in Touch With Us</h2>
+                <p>For More Information About Our Product & Services. Please Feel Free To Drop Us An Email. Our Staff Always Be There To Help You Out. Do Not Hesitate!</p>
+            </section>   
+        <div class="container">
+            <div class="contact-wrapper">
+                <div class="contact-details">
+                    <h3>Contact Information</h3>
+                    <div class="info">
+                        <p><i class="fas fa-map-pin"></i> 796X+W3, Sta Cruz, Laguna</p>
+                        <p><i class="fas fa-phone"></i> +1 (234) 567-8901</p>
+                        <p><i class="fas fa-clock"></i> Mon - Fri: 9:00 AM - 5:00 PM</p>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h3>Send Us a Message</h3>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" placeholder="Your Name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Your Email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" placeholder="Subject" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea rows="4" placeholder="Message" class="form-control" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="attachment">Attach a file (optional):</label>
+                            <input type="file" id="attachment" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero">
+            <div class="hero-features">
+                <div class="hero-feature-item">
+                    <img src="{{ url_for('static', filename='images/trophy.png') }}" alt="Trophy Icon" >
+                    <strong>High Quality:</strong>
+                    <p>crafted from top materials</p>
+                </div>
+                <div class="hero-feature-item">
+                    <img src="{{ url_for('static', filename='images/guarantee.png') }}" alt="Guarantee Icon" >
+                    <strong>Warranty Protection:</strong>
+                    <p>Over 2 years</p>
+                </div>
+                <div class="hero-feature-item">
+                    <img src="{{ url_for('static', filename='images/shipping.png') }}" alt="Shipping Icon" >
+                    <strong>Free Shipping:</strong>
+                    <p>Order over $150</p>
+                </div>
+                <div class="hero-feature-item">
+                    <img src="{{ url_for('static', filename='images/support.png') }}" alt="Support Icon" >
+                    <strong>24/7 Support:</strong>
+                    <p>Dedicated support</p>
+                </div>
+            </div>
+        </div>
+        
+    </main> 
+
+    
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="footer-logo-img">
+                <span class="footer-logoname">Chairable</span>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-media">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Help</h3>
+                <ul>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#shipping">Shipping Information</a></li>
+                    <li><a href="#returns">Returns & Exchanges</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to our newsletter for the latest updates and offers:</p>
+                <form action="#" method="post" class="newsletter-form">
+                    <input type="email" placeholder="Your Email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <p>Learn more about our company, values, and mission.</p>
+                <a href="#about" class="btn">Read More</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Chairable. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/popover.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/fetchCart.js') }}"></script>
+
+</body>
+</html>

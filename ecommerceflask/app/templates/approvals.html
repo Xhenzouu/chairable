@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Product Approvals</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/regform.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_products.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</head>
+<style>
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        border: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap; /* Added to prevent wrapping */
+        word-wrap: normal; /* Added to prevent wrapping */
+
+    }
+
+    .product-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        transition: transform 0.2s;
+    }
+
+    .product-image:hover {
+        transform: scale(2);
+        cursor: pointer;
+    }
+
+    /* Adjust table cell padding for images */
+    table td:nth-child(2) {
+        padding: 8px;
+        text-align: center;
+    }
+
+    th {
+            background-color: #FFF3E3;
+            color: #856404;
+            font-weight: bold;          
+        }     
+
+    
+</style>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                <span class="logoname">Chairable</span>
+            </div>
+            <ul class="nav-links">        
+                <li><a href="{{ url_for('accounts') }}">Buyers</a></li> 
+                <li><a href="{{ url_for('admin_users') }}">Sellers</a></li>
+                <li><a href="{{ url_for('approvals') }}">Approvals</a></li>
+                <li><a href="{{ url_for('admin_user_archive') }}">Archive</a></li>
+                <li><a href="{{ url_for('admin_commissions') }}">Commissions</a></li>
+            </ul>
+            <div class="icon-container">
+                <div class="user-profile">
+                    <a href="#" aria-label="User  Profile"><i class="fas fa-user"></i></a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('logout') }}" aria-label="Log Out">Log Out</a>
+                    </div>
+                </div>
+                <a href="#" aria-label="Search"><i class="fas fa-search"></i></a>
+            </div>
+        </nav>
+    </header>
+    <div class="product-table-container">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Product Image</th>
+                        <th>Admin ID</th>
+                        <th>Product Name</th>
+                        <th>Product Description</th>
+                        <th>Approval Status</th>
+                        <th>Approval Date</th>
+                        <th>Comments</th>
+                        <th>Seller ID</th>
+                        <th>Category</th>
+                        <th>Subcategory</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                        <th>Display Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for approval in approvals %}
+                    <tr>
+                        <td>{{ approval.product.id }}</td>
+                        <td>
+                            {% if approval.product.image_url %}
+                            <img src="{{ approval.product.image_url }}" alt="Product image for {{ approval.product.name }}" class="product-image">                                     
+                            {% else %}
+                                <span>No image available</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ approval.admin_id }}</td>  <!-- Display Admin ID -->
+                        <td>{{ approval.product.name }}</td>
+                        <td>{{ approval.product.description }}</td>
+                        <td>
+                            <select id="status-{{ approval.product.id }}" aria-label="Approval Status">
+                                <option value="pending" {% if approval.product.approval_status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="approved" {% if approval.product.approval_status == 'approved' %}selected{% endif %}>Approved</option>
+                                <option value="rejected" {% if approval.product.approval_status == 'rejected' %}selected{% endif %}>Rejected</option>
+                            </select>
+                        </td>
+                        <td id="approval-date-{{ approval.product.id }}">
+                            {% if approval.approval_date %}
+                                {{ approval.approval_date.strftime('%Y-%m-%d %I:%M %p') }}
+                            {% else %}
+                                Not approved yet
+                            {% endif %}
+                        </td>
+                        <td>
+                            <textarea id="comment-{{ approval.product.id }}" rows="2" placeholder="Add comments...">{{ approval.comments }}</textarea>
+                        </td>
+                        <td>{{ approval.product.seller_id }}</td>
+                        <td>{{ approval.product.category }}</td>
+                        <td>{{ approval.product.subcategory }}</td>
+                        <td>{{ approval.product.created_at.strftime('%Y-%m-%d %I:%M %p') }}</td>
+                        <td>{{ approval.product.updated_at.strftime('%Y-%m-%d %I:%M %p') }}</td>
+                        <td id="display-status-{{ approval.product.id }}">
+                            {{ approval.product.display_status }}
+                        </td>
+                        <td>
+                            <button class="button" onclick="submitApproval('{{ approval.product.id }}')">Submit for Approval</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function submitApproval(productId) {
+            const status = document.getElementById(`status-${productId}`).value;
+            const comment = document.getElementById(`comment-${productId}`).value;
+    
+            fetch('/submit-approval', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    productId: productId,
+                    status: status,
+                    comment: comment
+                })
+            })
+            .then(response => response.json())
+            .then(data => { 
+                if (data.error) {
+                    console.error('Server error:', data.error);
+                    alert('Error: ' + data.error);
+                } else {
+                    alert('Product approval updated successfully');
+    
+                    // Update the status in the table
+                    const statusSelect = document.getElementById(`status-${productId}`);
+                    statusSelect.value = data.status;
+    
+                    // Update the approval date in the table
+                    const approvalDateCell = document.querySelector(`#approval-date-${productId}`);
+                    if (approvalDateCell) {
+                        approvalDateCell.textContent = new Date().toLocaleString();
+                    }
+    
+                    // Update the display status text if you have a specific element for it
+                    const displayStatusCell = document.querySelector(`#display-status-${productId}`);
+                    if (displayStatusCell) {
+                        displayStatusCell.textContent = data.displayStatus;
+                        displayStatusCell.style.display = data.displayStatus === 'visible' ? 'block' : 'none'; // Show or hide based on status
+                    }
+    
+                    // Optionally reload the page to show updated data
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('There was an error submitting the approval. Please try again.');
+            });
+        }
+    </script>
+</body>
+</html>

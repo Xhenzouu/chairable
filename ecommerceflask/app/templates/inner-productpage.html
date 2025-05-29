@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Product details for {{ product.name }}.">
+    <title>{{ product.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.js') }}" defer></script>
+</head>
+<body>
+    <header>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+            <nav class="navbar">
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                    <span class="logoname">Chairable</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#shop">Shop</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="icon-container">
+                    <a href="#" aria-label="User Profile"><i class="fas fa-user"></i></a>
+                    <a href="#" aria-label="Search"><i class="fas fa-search"></i></a>
+                    <a href="#" aria-label="Favorites"><i class="fas fa-heart"></i></a>
+                    <a href="#" aria-label="Shopping Cart"><i class="fas fa-shopping-cart"></i></a>
+                </div>
+            </nav>
+    </header>        
+<main>
+    <div class="container">
+        <div class="product-details row">
+            <div class="col-md-5">
+                <img src="https://via.placeholder.com/400x300" alt="{{ product.name }}" class="img-fluid rounded" loading="lazy">
+            </div>
+            <div class="col-md-7">
+                <h5>{{ product.name }}</h5>
+                <p class="text-muted">Category: T-Shirts</p>
+                <div class="ratings">
+                    {% for star in range(1, 6) %}
+                        {% if star <= product.rating %}
+                            <i class="fas fa-star text-primary"></i>
+                        {% else %}
+                            <i class="far fa-star text-primary"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <h5 class="pt-4">${{ product.price }}</h5>
+                <p class="description text-muted">{{ product.description }}</p>
+                <button class="btn btn-custom" onclick="addToCart('{{ product.name }}')">Add to Cart</button>
+                <button class="btn btn-custom" onclick="buyNow('{{ product.name }}')">Buy Now</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="footer-logo-img">
+            <span class="footer-logoname">Chairable</span>
+        </div>
+        <div class="footer-section">
+            <h3>Follow Us</h3>
+            <div class="social-media">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+        <div class="footer-section">
+            <h3>Help</h3>
+            <ul>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#shipping">Shipping Information</a></li>
+                <li><a href="#returns">Returns & Exchanges</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Newsletter</h3>
+            <p>Subscribe to our newsletter for the latest updates and offers:</p>
+            <form action="#" method="post" class="newsletter-form">
+                <input type="email" placeholder="Your Email" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+        <div class="footer-section">
+            <h3>About Us</h3>
+            <p>Learn more about our company, values, and mission.</p>
+            <a href="#about" class="btn">Read More</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 Chairable. All rights reserved.</p>
+    </div>
+</footer>
+<script src="{{ url_for('static', filename='js/slim.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/min.js') }}"></script>
+<script>
+    function confirmLogout() {
+        if (confirm("Are you sure you want to log out?")) {
+            window.location.href = "/logout"; 
+        }
+    }
+
+    function addToCart(productName) {
+        alert(productName + " has been added to your cart!");
+    }
+
+    function buyNow(productName) {
+        alert("Redirecting to purchase " + productName);
+    }
+</script>
+
+</body>
+</html>

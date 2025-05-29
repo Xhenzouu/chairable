@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Your existing styles here */
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                <span class="logoname">Chairable</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index" class="back-to-home">Home</a></li>
+                <li><a href="{{ url_for('shop') }}">Shop</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="icon-container">
+                <a href="#" aria-label="User  Profile"><i class="fas fa-user"></i></a>
+                <a href="#" aria-label="Search"><i class="fas fa-search"></i></a>
+                <a href="#" aria-label="Favorites"><i class="fas fa-heart"></i></a>
+                <a href="#" id="cart-icon" aria-label="Shopping Cart"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="checkout-container">
+            <div class="checkout-wrapper">
+                <div class="billing-details">
+                    <h3>Billing Details</h3>
+                    <form id="checkout-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="first-name">Name</label>
+                                <input type="text" id="first-name" class="form-control" value="{{ user.name }}" placeholder="First Name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="company-name">Company Name (optional)</label>
+                            <input type="text" id="company-name" class="form-control" value="{{ user.company_name }}" placeholder="Company Name (optional)">
+                        </div>
+                        <div class="form-group">
+                            <label for="country">Country</label>
+                            <input type="text" id="country" class="form-control" value="{{ user.country }}" placeholder="Country" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="street-address">Street Address</label>
+                            <input type="text" id="street-address" class="form-control" value="{{ user.street_address }}" placeholder="Street Address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="city">Town / City</label>
+                            <input type="text" id="city" class="form-control" value="{{ user.city }}" placeholder="Town / City" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="province">Province</label>
+                            <input type="text" id="province" class="form-control" value="{{ user.province }}" placeholder="Province" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="zip-code">ZIP code</label>
+                            <input type="text" id="zip-code" class="form-control" value="{{ user.zip_code }}" placeholder="ZIP code" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">+63</span>
+                                <input type="number" id="phone" class="form-control" value="{{ user.phone }}" placeholder="Phone Number" required>    
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" class="form-control" value="{{ user.email }}" placeholder="Email Address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="additional-info">Additional Information</label>
+                            <textarea id="additional-info" class="form-control" rows="3" placeholder="Additional Information"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="place-order-btn">Place order</button>
+                    </form>
+                </div>
+                <div class="order-summary">
+                    <h3>Your Order</h3>
+                    <table class="order-table">
+                        <tr>
+                            <th>Subtotal</th>
+                            <td id="subtotal">₱0.00</td>
+                        </tr>
+                        <tr>
+                            <th>Shipping</th>
+                            <td id="shipping">₱0.00</td>
+                        </tr>
+                        <tr>
+                            <th>Total</th>
+                            <td id="total">₱0.00</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+    </footer>
+    <script src="{{ url_for('static', filename='js/slim.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/checkout.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/fetchCart.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            function updateCartDisplay() {
+                const subtotalElement = document.getElementById('subtotal');
+                const shippingElement = document.getElementById('shipping');
+                const totalElement = document.getElementById('total');
+
+                let subtotal = 0;
+
+                cart.forEach(item => {
+                    const itemPrice = parseFloat(item.price);
+                    const itemQuantity = parseInt(item.quantity);
+                    subtotal += itemPrice * itemQuantity;
+                });
+
+                // Calculate shipping fee (10% of subtotal, minimum 5)
+                const shippingFee = Math.max(subtotal * 0.10, 5);
+                const total = subtotal + shippingFee;
+
+                // Update the display
+                subtotalElement.textContent = `₱${subtotal.toFixed(2)}`;
+                shippingElement.textContent = `₱${shippingFee.toFixed(2)}`;
+                totalElement.textContent = `₱${total.toFixed(2)}`;
+            }
+
+            // Call updateCartDisplay to display initial totals
+            updateCartDisplay();
+
+            // Event listener for the checkout button
+            document.getElementById('checkout-btn').addEventListener('click', function() {
+                // Check if the cart is empty
+                if (cart.length === 0) {
+                    alert('Your cart is empty. Please add items to your cart before checking out.');
+                    return;
+                }
+
+                // Redirect to the checkout page
+                window.location.href = '/checkout'; // Change this to your actual checkout page URL
+            });
+        });
+    </script>
+</body>
+</html>

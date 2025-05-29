@@ -1,0 +1,141 @@
+.notification-popover {
+    display: flex; /* Make the popover a flex container */
+    flex-direction: column; /* Stack children vertically */
+    height: auto; /* Auto height based on content */
+    max-height: 400px; /* Max height for the popover */
+    overflow-y: auto; /* Enable scrolling for the items if they exceed max height */
+    position: fixed;
+    right: 20px; /* Position from the right */
+    top: 70px; /* Position from the top */
+    width: 450px; /* Width for the notification popover */
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    z-index: 300; /* Ensure it appears above other content */
+    border-radius: 10px;
+    visibility: hidden; /* Hidden by default */
+    opacity: 0; /* Fully transparent */
+    transition: visibility 0s, opacity 0.3s ease;
+}
+
+.notification-popover-header {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    justify-content: space-between; /* Space between title and close button */
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px; /* Increase padding to add more height */
+    height: 40px; /* Set a fixed height */
+}
+
+#delete-selected {
+    background-color: #007bff; /* Button color */
+    color: white; /* Text color */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    padding: 5px 10px; /* Padding inside the button */
+}
+
+#delete-selected:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+.notifications {
+    list-style-type: none; /* No bullet points */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
+}
+
+.notifications li {
+    padding: 10px; /* Space around each notification */
+    border-bottom: 1px solid #ddd; /* Separator between notifications */
+}
+
+.notification-item {
+    display: flex; /* Use flexbox for horizontal alignment */
+    align-items: center; /* Center items vertically */
+    justify-content: space-between; /* Space between text and buttons */
+    padding: 5px 0; /* Add some vertical padding */
+}
+
+.notification-checkbox {
+    margin-left: 10px; /* Space between text and checkbox */
+    cursor: pointer; /* Change cursor to pointer for better UX */
+}
+
+.delete-button {
+    background-color: red; /* Red background for delete button */
+    color: white; /* White text */
+    border: none;
+    padding: 5px 10px; /* Padding for button */
+    border-radius: 3px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+}
+
+.delete-button:hover {
+    background-color: darkred; /* Darker red on hover */
+}
+
+.notification-item p {
+    margin: 0; /* Remove default margin */
+    flex-grow: 1; /* Allow the text to take available space */
+}
+
+
+.notifications .button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+.fab {
+    position: absolute;
+    bottom: 20px; /* Distance from the bottom */
+    right: 20px; /* Distance from the right */
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text */
+    border: none;
+    border-radius: 50%; /* Circular shape */
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.fab:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+#delete-button {
+    background-color: #FFDE59; /* Button color */
+    color: black; /* Text color */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    padding: 1.75px 2px; /* Padding inside the button */
+    font-size: 14px; /* Font size for the button */
+    width: auto; /* Allow width to adjust based on content */
+}
+
+#delete-button:hover {
+    background-color: #CD7F4B; /* Button color */
+    color: black;
+
+}
+
+#delete-button i {
+    color: red;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0); /* Clip the element */
+    border: 0;
+    white-space: nowrap; /* Prevent line breaks */
+}

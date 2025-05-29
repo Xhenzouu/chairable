@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archived Products</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/regform.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage_products.css') }}">
+    <script src="{{ url_for('static', filename='js/manage_products.js') }}" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Additional styles for image display */
+        .image-container {
+            position: relative;
+            display: inline-block;
+        }
+        .product-image {
+            width: 50px; /* Thumbnail size */
+            height: 50px; /* Thumbnail size */
+            cursor: pointer;
+        }
+        .full-image {
+            display: none;
+            position: absolute;
+            top: 60px; /* Adjust based on thumbnail height */
+            left: 0;
+            z-index: 10;
+            width: 300px; /* Full image size */
+            height: auto;
+            border: 1px solid #ccc;
+            background-color: white;
+        }
+
+        .inline-form {
+            display: inline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px; /* Consistent padding */
+            text-align: center;
+            border: 1px solid #ccc; /* Consistent border */
+        }
+
+        th {
+
+            background-color: #FFF3E3;
+            color: #856404;
+            font-weight: bold;          
+        }     
+  
+        td {
+            min-height: 50px; /* Ensures minimum height for consistency */
+            line-height: 1.5; /* Adjust as needed */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairable Logo" class="logo">
+                <span class="logoname">Chairable</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('orders') }}">Orders</a></li>
+                <li><a href="{{ url_for('manage_products') }}">Products</a></li>
+                <li><a href="{{ url_for('archived_products') }}">Archived Products</a></li>
+            </ul>
+            <div class="icon-container">
+                <a href="#" aria-label="User Profile"><i class="fas fa-user"></i></a>
+                <a href="#" aria-label="Search"><i class="fas fa-search"></i></a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="product-table-container">
+            <section id="products">
+                <div class="filter-container">
+                    
+                <div class="table-wrapper margin-top">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Discounted Price</th>
+                        <th>Stock</th>
+                        <th>SKU</th>
+                        <th>Category</th>
+                        <th>Subcategory</th>
+                        <th>Variant</th>
+                        <th>Image</th>
+                        <th>Additional Image</th>
+                        <th>Material</th>
+                        <th>Dimensions</th>
+                        <th>Weight</th>
+                        <th>Shipping Weight</th>
+                        <th>Shipping Dimensions</th>
+                        <th>Indoor/Outdoor</th>
+                        <th>Color</th>
+                        <th>Brand</th>
+                        <th>Power Source</th>
+                        <th>Warranty</th>
+                        <th>Seller ID</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                        <th>Approval Status</th>
+                        <th>Admin Comments</th>
+                        <th>Display Status</th>
+                        <th>Rating</th>
+                        <th>Reviews</th>
+                        <th>Tags</th>
+                        <th>Sale Price</th>
+                        <th>On Sale</th>
+                        <th>Availability Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in archived_products %}
+                    <tr>
+                        <td>{{ product[0] }}</td>
+                        <td>{{ product[1] }}</td>
+                        <td>{{ product[2] }}</td>
+                        <td>{{ product[3] }}</td>
+                        <td>{{ product[33] }}</td>
+                        <td>{{ product[4] }}</td>
+                        <td>{{ product[5] }}</td>
+                        <td>{{ product[6] }}</td>
+                        <td>{{ product[7] }}</td>
+                        <td>{{ product[8] }}</td>
+                        <td>
+                            {% if product[9] %}
+                                <img src="{{ product[9] }}" alt="{{ product[1] }}" class="product-image">
+                            {% else %}
+                                No Image
+                            {% endif %}
+                        </td>
+                        <td>{{ product[10] }}</td>
+                        <td>{{ product[11] }}</td>
+                        <td>{{ product[12] }}</td>
+                        <td>{{ product[13] }}</td>
+                        <td>{{ product[14] }}</td>
+                        <td>{{ product[15] }}</td>
+                        <td>{{ product[16] }}</td>
+                        <td>{{ product[17] }}</td>
+                        <td>{{ product[18] }}</td>
+                        <td>{{ product[19] }}</td>
+                        <td>{{ product[20] }}</td>
+                        <td>{{ product[21] }}</td>
+                        <td>{{ product[22] }}</td>
+                        <td>{{ product[23] }}</td>
+                        <td>{{ product[24] }}</td>
+                        <td>{{ product[25] }}</td>
+                        <td>{{ product[26] }}</td>
+                        <td>{{ product[27] }}</td>
+                        <td>{{ product[28] }}</td>
+                        <td>{{ product[29] }}</td>
+                        <td>{{ product[30] }}</td>
+                        <td>{{ product[31] }}</td>
+                        <td>{{ product[32] }}</td>
+                        <td>
+                            <!-- Unarchive Product -->
+                            <form action="{{ url_for('unarchive_product', product_id=product[0]) }}" method="POST" style="display:inline;">
+                                <input type="submit" value="Unarchive" class="button" onclick="return confirm('Are you sure you want to unarchive this product?');">
+                            </form>
+                            <!-- Permanently Delete Product -->
+                            <form action="{{ url_for('delete_product', product_id=product[0]) }}" method="POST" style="display:inline;">
+                                <input type="submit" value="Delete" class="button" onclick="return confirm('Are you sure you want to permanently delete this product?');">
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="36">No archived products found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    
+</body>
+</html>

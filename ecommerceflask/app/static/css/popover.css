@@ -1,0 +1,192 @@
+.cart-popover {
+    display: flex; /* Make the popover a flex container */
+    flex-direction: column; /* Stack children vertically */
+    height: auto; /* Auto height based on content */
+    max-height: 500px; /* Max height for the popover */
+    overflow: hidden; /* Hide overflow content to avoid scrolling on the popover itself */
+    position: fixed;
+    right: 20px;
+    top: 70px;
+    width: 400px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    z-index: 300;
+    border-radius: 10px;
+    visibility: hidden; /* Ensure it's hidden by default */
+    opacity: 0; /* Fully transparent */
+    transition: visibility 0s, opacity 0.3s ease;
+}
+
+.cart-popover-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.cart-popover-header h5 {
+    font-weight: bold; /* Make text bold */
+}
+
+.cart-items {
+    flex-grow: 1; /* Allow this section to grow and take available space */
+    overflow-y: auto; /* Enable scrolling for the items if they exceed max height */
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Space between items */
+}
+
+.price-container {
+    text-align: center; /* Centers the price text within the container */
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1px;
+}
+
+.product-img {
+    width: 100px;  /* Increased width */
+    height: 100px; /* Increased height */
+    border-radius: 15px;
+}
+
+.product-details {
+    border: none; /* No border */
+    outline: none; /* No outline */
+    padding: 5px; /* Adjust as needed */
+    background-color: transparent; /* Match your layout */
+    box-shadow: none; /* No shadow */
+    width: auto; /* Only takes necessary width */
+}
+
+.cart-summary {
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    text-align: center;
+    flex-shrink: 0; /* Prevent this from shrinking */
+}
+
+.subtotal-row {
+    display: flex; /* Use flexbox to align items */
+    justify-content: center; /* Space between label and price */
+    align-items: center; /* Center items vertically */
+    margin-top: -10px; /* Optional: Add space above the subtotal row */
+}
+
+.cart-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* Adds space between buttons */
+}
+
+.cart-btn {
+    color: #000000;
+    background-color: white;
+    border: 1px solid #000000;
+    padding: 5px 10px; /* Reduced padding for smaller buttons */
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px; /* Smaller font size */
+}
+
+.cart-btn:hover {
+    background-color: #FFF3E3;
+    font-weight: bold;
+    color: #000;    
+}
+
+.close-btn {
+    background: none; /* Remove default background */
+    border: none; /* Remove default border */
+    font-size: 24px; /* Increase font size for a bigger button */
+    cursor: pointer; /* Change cursor to pointer */
+    color: #c70000; /* Set color */
+    transition: color 0.3s, transform 0.3s; /* Optional transition for smooth effects */
+    padding: 5px; /* Add padding to increase button size */
+    line-height: 1; /* Adjust line height for vertical alignment */
+}
+
+.close-btn:hover {
+    background-color: transparent; /* Explicitly set to transparent on hover */
+    color: #c70000; /* Keep color consistent on hover */
+    transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+.close-btn:focus {
+    outline: none; /* Remove the outline when focused */
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black */
+    z-index: 100; /* Ensure the overlay has a lower z-index */
+    visibility: hidden; /* hide by default */
+    opacity: 0; /* fully transparent */
+    transition: visibility 0s, opacity 0.5s;
+}
+
+.overlay.visible {
+    visibility: visible; /* show when this class is added */
+    opacity: 1; /* fully opaque */
+}
+
+.remove-btn {
+    background: none; /* Remove default background */
+    font-size: 24px; /* Increase font size for a bigger button */
+    cursor: pointer; /* Change cursor to pointer */
+    color: #9F9F9F; /* Keep color consistent on hover */
+    transition: color 0.3s, transform 0.3s; /* Optional transition for smooth effects */
+    padding: 10px; /* Add padding to increase button size */
+    line-height: 1; /* Adjust line height for vertical alignment */
+    outline: none; /* Remove outline on click */
+}
+
+.remove-btn:hover {
+    background-color: transparent; /* Explicitly set to transparent on hover */
+    color: #c70000; /* Keep color consistent on hover */
+}
+
+.remove-btn:focus {
+    /* Optional: add a subtle shadow or change background color for focus indication */
+    box-shadow: 0 0 5px rgba(199, 0, 0, 0.5); /* Example shadow for focus indication */
+}
+
+
+.price {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+    color: #B88E2F;
+    margin-top: -6px;
+}
+
+.text-left {
+    flex: 0 0 auto;
+    text-align: left;
+    margin: 50;
+}
+
+.subtotal-price {
+    margin-left: 2em;
+    margin-bottom: 2em;
+}
+
+@media (max-width: 600px) {
+    .cart-popover {
+        width: 90%; /* Adjust to take most of the screen on small devices */
+        right: 5%;   /* Center it more on smaller screens */
+    }
+}
+
+
